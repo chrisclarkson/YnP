@@ -1,0 +1,110 @@
+<meta charset="utf-8">
+
+<title> Navigation Visualisation</title>
+<body>
+<script src="jquery.js"></script>
+<!-- <script src="chosen_v1.8.7/chosen.jquery.js"></script>
+ -->
+ <script src="chosen_v1.8.7/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="background.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
+<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
+<script type="text/javascript" src="vakata-jstree-c9d7c14/src/jstree.js"></script>
+<script src="d3.v3.min.js"></script>
+<script src="background.js"></script>
+<!-- <script src="upload.js"></script> -->
+
+
+<style>
+  
+  .node {
+    cursor: pointer;
+  }
+  /*.div {
+    cursor: pointer;
+  }*/
+
+  .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 3px;
+  }
+
+  .node text {
+    font: 12px sans-serif;
+  }
+
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+  .completed {
+    fill: green;
+  }
+  .pending {
+      fill: blue;
+  }
+  .dormant {
+      fill: purple;
+  }
+
+/*  .textboxclass {
+    height: 10px;
+    width: 80px;
+  }*/
+    </style>
+
+<div>
+<label><input id="check_id" type="checkbox" />referencing</label>
+<button type="button" id="btnCreate" size="5">add node</button>
+<button type="button" id="remove" size="5">remove node</button>
+<button type="button" id="clear" size="5">Clear</button>
+<button type="button" id="download" size="5">Download</button>
+<button type="button" id="pic" size="5">screenshot</button>
+</div>
+<div>
+
+<input type="text" placeholder="path to file" id="path" />
+<input type="button" id="upload" value="upload" />
+<input type="button" id="upload_scraped" value="upload csv" size="4"/>
+</div>
+<div>
+<input type="text" placeholder="height (id)" id="height" size="8" />
+<input type="text" placeholder="width (id)" id="width" size="8" />
+<!-- <button type="button" id="saveButton" size="8">export</button> -->
+
+<button type="button" id="resize" size="8">resize</button>
+</div>
+
+<div id="container"></div>
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-2">
+<button type="button" id="save" size="8" data-toggle="tab">save text</button>
+</div>
+<div class="col-xs-2">
+<button type="button" id="gototext" size="8" data-toggle="tab">go to</button>
+</div>
+<div class="col-xs-2">
+<button type="button" id="add_score" size="8" data-toggle="tab">add score</button>
+</div>
+<div class="col-xs-2">
+<label><input id="plot_scores" type="checkbox" data-toggle="tab"/>show scores</label>
+</div>
+<div class="col-xs-1">
+<input type="text" placeholder="1-10" id="score" data-toggle="tab"/>
+</div>
+</div>
+<div>
+<div id="sup_img" class="col-lg-12"></div>
+</div>
+<div id="text" class="col-lg-12">
+</div>
+<div id="scores_plot"></div>
+
+</body>
