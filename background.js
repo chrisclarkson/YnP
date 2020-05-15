@@ -134,10 +134,14 @@ $('#clear').click(function() {
   //update(tree,'reload');
 });
 
-function init(){
+function init(done_yet){
+  if(done_yet==='already_done'){
+      localStorage.setItem('done_yet','not_done');
+    }else{
     console.log('is this executing');
     screenshot.initEvents();
     console.log(' executing');
+  }
 }
 
 var screenshot = {
@@ -201,7 +205,8 @@ $('#pic').click(function(){
     }
   }
   localStorage.setItem('tree_in_store',JSON.stringify(tree));
-  init();
+  var done_yet=localStorage.getItem('done_yet');
+  init(done_yet);
 // var imgs = svg.select("#sup_img").data([0]);
 //     imgs.enter()
 //         .append("img")
@@ -601,6 +606,77 @@ $('#upload').click(function() {
   console.log(readTextFile("file://"+$('#path').val()))
 })
 
+$('#upload_branch').click(function() {
+  console.log('up')
+  function readTextFile(file,done_yet){
+    if(done_yet==='already_done'){
+      localStorage.setItem('done_yet','not_done');
+    }else{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                console.log(allText.slice(23700,23800));
+                console.log(allText.slice(8090,8110));
+                var tree=JSON.parse(allText);
+                var treenew=flatten([tree]);
+                treeold=JSON.parse(localStorage.getItem('tree_in_store'));
+                list=[]
+                for(var i = 0; i < treeold.length; i++){
+                  list.push(Number(treeold[i]['_id']));
+                }
+                var branch_in_store=localStorage.getItem('branch_in_store');
+                var max_id=d3.max(list)+1;
+                for(var i = 0; i < treenew.length; i++){
+                  if(treenew[i]['_id']==="p1"){
+                    console.log('point')
+                    treenew[i]['_id']=max_id;
+                    treenew[i]['parentAreaRef']={id:Number(branch_in_store)}
+                    console.log(treenew[i])
+                  }else{
+                    console.log('adding');
+                    console.log(Number(treenew[i]['_id']));
+                    console.log(Number(treenew[i]['_id'])+max_id);
+                    console.log(treenew[i]['parentAreaRef']['id']+max_id);
+                    treenew[i]['_id']=Number(treenew[i]['_id'])+max_id;
+                    if(treenew[i]['parentAreaRef']['id']==="p1"){
+                      console.log('parent children');
+                      treenew[i]['parentAreaRef']['id']=max_id;
+                      console.log(treenew[i]);
+                    }else{
+                      treenew[i]['parentAreaRef']['id']=Number(treenew[i]['parentAreaRef']['id'])+max_id;
+                    }
+                  }
+                  treeold.push(treenew[i]);
+                }
+                var idToNodeMap = {};
+                var root = null;
+                var tree=make_tree(treeold,idToNodeMap,root);
+                console.log(treeold);
+                var width=localStorage.getItem('width');
+                var height=localStorage.getItem('height');
+                update(tree,'reload',width,height);
+                //update(tree,'reload');
+                localStorage.setItem('tree_in_store', JSON.stringify(flatten([tree])));
+                change_counter();
+            }
+        }
+    }
+    rawFile.send(null);
+    localStorage.setItem('done_yet','already_done');
+  }
+  }
+  var done_yet=localStorage.getItem('done_yet');
+  console.log(readTextFile("file://"+$('#path').val(),done_yet));
+})
+
+
+
 $('#upload_scraped').click(function() {
   console.log('up')
   function readTextFile(file){
@@ -620,8 +696,6 @@ $('#upload_scraped').click(function() {
                 var width=localStorage.getItem('width');
                 var height=localStorage.getItem('height');
                 update(tree,'reload',width,height);
-                
-                
             }
         }
     }
