@@ -499,36 +499,49 @@ function connect() {
   });
 }
 
-$('#gototext').click(function() {
+
+
+function gothere(done_yet) {
+  if(done_yet==='already_done'){
+    localStorage.setItem('done_yet','not_done')
+  }else{
   var linkback=localStorage.getItem('linkback');
   var linker=localStorage.getItem('linker');
   var number=localStorage.getItem('number');
   var cat =localStorage.getItem('cat')
   //chrome.tabs.create({ url: linker, active: true});
-    var msg={
-      action:'scrollto',
-      linker:linker,
-      linkback:linkback,
-      number:number,
-      cat:cat
-    }
-  // chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-  //   chrome.tabs.sendMessage(tabs[0].id, msg);
-  //   });
-  // chrome.tabs.create({ url: linker }, function(tab) {
-  //     //chrome.tabs.sendMessage(tab.id, msg);
-  //     connect(msg);
-  // });
-  chrome.tabs.create({ url: linker }, function(tab) {
-  // Why do you query, when tab is already given?
-  chrome.tabs.executeScript(tab.id, {file:"jquery-3.1.0.min.js"}, function() {
-    // This executes only after jQuery has been injected and executed
-    chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
-      // This executes only after your content script executes
-      chrome.tabs.sendMessage(tab.id, msg);
+      var msg={
+        action:'scrollto',
+        linker:linker,
+        linkback:linkback,
+        number:number,
+        cat:cat
+      }
+    // chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+    //   chrome.tabs.sendMessage(tabs[0].id, msg);
+    //   });
+    // chrome.tabs.create({ url: linker }, function(tab) {
+    //     //chrome.tabs.sendMessage(tab.id, msg);
+    //     connect(msg);
+    // });
+    chrome.tabs.create({ url: linker }, function(tab) {
+    // Why do you query, when tab is already given?
+    chrome.tabs.executeScript(tab.id, {file:"jquery-3.1.0.min.js"}, function() {
+      // This executes only after jQuery has been injected and executed
+      chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
+        // This executes only after your content script executes
+        chrome.tabs.sendMessage(tab.id, msg);
+      });
     });
   });
-});
+    localStorage.setItem('done_yet','already_done')
+  }
+}
+
+
+$('#gototext').click(function() {
+  var done_yet=localStorage.getItem('done_yet');
+  gothere(done_yet)
 });
 
 
