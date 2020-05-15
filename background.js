@@ -780,6 +780,7 @@ function download_json(done_yet){
     localStorage.setItem('done_yet','already_done')
   }
 }
+
 $('#download').click(function(){
 
     // var tree_in_store=JSON.parse(localStorage.getItem('tree_in_store'));
