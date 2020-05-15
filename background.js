@@ -141,6 +141,7 @@ function init(done_yet){
     console.log('is this executing');
     screenshot.initEvents();
     console.log(' executing');
+    localStorage.setItem('done_yet','already_done');
   }
 }
 
@@ -748,10 +749,29 @@ function encode( s ) {
     return new Uint8Array( out );
 }
 
-$('#download').click(function(){
+
+function download_json(done_yet){
+  if(done_yet==='already_done'){
+    localStorage.setItem('done_yet','not_done');
+  }else{
     var tree_in_store=JSON.parse(localStorage.getItem('tree_in_store'));
     var v=make_tree(tree_in_store,idToNodeMap,root);
     var data = encode(JSON.stringify(v, null, 4));
+    var blob = new Blob([data], {type: 'application/octet-stream'});
+    var url = URL.createObjectURL(blob);
+    console.log(tree_in_store[0].name.split(' ').join('_')+'.YnP.json');
+    chrome.downloads.download({
+      url: url, // The object URL can be used as download URL
+      filename: String(tree_in_store[0].name.split(' ').join('_')+'.YnP.json')
+  });
+    localStorage.setItem('done_yet','already_done')
+  }
+}
+$('#download').click(function(){
+
+    // var tree_in_store=JSON.parse(localStorage.getItem('tree_in_store'));
+    // var v=make_tree(tree_in_store,idToNodeMap,root);
+    // var data = encode(JSON.stringify(v, null, 4));
     // var blob = new Blob( [ data ], {
     //     type: 'application/octet-stream'
     // });
@@ -778,13 +798,10 @@ $('#download').click(function(){
 // }());
 //     fileName = "/Users/Deirdreclarkson/js/json_files/my-download.json";
 //     saveData(data, fileName);
-var blob = new Blob([data], {type: 'application/octet-stream'});
-var url = URL.createObjectURL(blob);
-console.log(tree_in_store[0].name.split(' ').join('_')+'.YnP.json');
-chrome.downloads.download({
-  url: url, // The object URL can be used as download URL
-  filename: String(tree_in_store[0].name.split(' ').join('_')+'.YnP.json')
-});
+
+var done_yet=localStorage.getItem('done_yet');
+download_json(done_yet)
+
 });
 
 $('#save').click(function(){
