@@ -871,11 +871,50 @@ function findObjectById(root, id) {
     }
 };
 
+// function centerNode(source) {
+//   var zoomListener = d3.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+//   t = d3.zoomTransform(d3.select("#container").node());
+//   x = -source.y0;
+//   y = -source.x0;
+//   x = x * t.k + viewerWidth / 2;
+//   y = y * t.k + viewerHeight / 2;
+//   console.log(x)
+//   console.log(y)
+//   d3.select('svg').transition().duration(duration).call( zoomListener.transform, d3.zoomIdentity.translate(x,y).scale(t.k) );
+// }
 
+function zoom() {
+    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
+function centerNode(source) {
+
+  var width_update=localStorage.getItem('width');
+  var height_update=localStorage.getItem('height');
+  var margin = {top: 20, right: 120, bottom: 20, left: 120},
+            width = Number(width_update) - margin.right - margin.left,
+            height = Number(height_update) - margin.top - margin.bottom;
+    var zoomListener = d3.behavior.zoom().scaleExtent([width, height]).on("zoom", zoom);
+    scale = zoomListener.scale();
+    x = -source.x;
+    y = -source.y;
+    console.log('look here')
+    console.log(x)
+    x = x * scale + width/2;
+    y = y * scale + height/2;
+    d3.select("#container").transition()
+        .duration(750)
+        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+    zoomListener.scale(scale);
+    zoomListener.translate([x, y]);
+}
 
 
 function searchTree(element, matchingTitle){
-     if(element.id == matchingTitle){
+    console.log('is this working?')
+    console.log(element.name)
+     if(element.name == matchingTitle){
+          console.log(element)
           return element;
      }else if (element.children != null){
           var i;
@@ -887,6 +926,65 @@ function searchTree(element, matchingTitle){
      }
      return null;
 }
+
+$("#search").click(function() {
+    var tree=JSON.parse(localStorage.getItem('tree_in_store'))
+    var obj=make_tree(tree,idToNodeMap,root);
+    var matchingTitle=$('#path').val()
+    console.log(matchingTitle)
+    var paths = searchTree(obj,matchingTitle);
+    console.log(paths.x0);
+    centerNode(paths);
+    // if(typeof(paths) !== "undefined"){
+    //   openPaths(paths);
+    // }
+    // else{
+    //   alert(e.object.text+" not found!");
+    // }
+  })
+
+
+
+
+
+// function searchTree(obj,search,path){
+//   var tree=JSON.parse(localStorage.getItem('tree_in_store'))
+//   var obj=make_tree(tree,idToNodeMap,root);
+//     if(obj.name === search){ //if search is found return, add the object to the path and return it
+//       path.push(obj);
+//       return path;
+//     }
+//     else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+//       var children = (obj.children) ? obj.children : obj._children;
+//       for(var i=0;i<children.length;i++){
+//         path.push(obj);// we assume this path is the right one
+//         var found = searchTree(children[i],search,path);
+//         if(found){// we were right, this should return the bubbled-up path from the first if statement
+//           return found;
+//         }
+//         else{//we were wrong, remove this parent from the path and continue iterating
+//           path.pop();
+//         }
+//       }
+//     }
+//     else{//not the right object, return false so it will continue to iterate in the loop
+//       return false;
+//     }
+// }
+
+// function searchTree(element, matchingTitle){
+//      if(element.id == matchingTitle){
+//           return element;
+//      }else if (element.children != null){
+//           var i;
+//           var result = null;
+//           for(i=0; result == null && i < element.children.length; i++){
+//                result = searchTree(element.children[i], matchingTitle);
+//           }
+//           return result;
+//      }
+//      return null;
+// }
 
 function getNodeById(id, node){
     var reduce = [].reduce;
@@ -1161,28 +1259,7 @@ function update(treeData,just_loaded,width_update,height_update) {
 
 
 
-function zoom() {
-    svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
 
-function centerNode(source) {
-  var width_update=localStorage.getItem('width');
-  var height_update=localStorage.getItem('height');
-  var margin = {top: 20, right: 120, bottom: 20, left: 120},
-            width = Number(width_update) - margin.right - margin.left,
-            height = Number(height_update) - margin.top - margin.bottom;
-    var zoomListener = d3.behavior.zoom().scaleExtent([width, height]).on("zoom", zoom);
-    scale = zoomListener.scale();
-    x = -source.x0;
-    y = -source.y0;
-    x = x * scale + width/4;
-    y = y * scale + height/4;
-    d3.select('g').transition()
-        .duration(750)
-        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-    zoomListener.scale(scale);
-    zoomListener.translate([x, y]);
-}
 
 function click(datum){
   //centerNode(datum);
