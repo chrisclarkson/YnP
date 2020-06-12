@@ -689,7 +689,28 @@ $('#upload_branch').click(function() {
   console.log(readTextFile("file://"+$('#path').val(),done_yet));
 })
 
-
+function list_to_tree(list) {
+    var map = {}, node, roots = [], i;
+    for (i = 0; i < list.length; i += 1) {
+        map[list[i]._id] = i; // initialize the map
+        list[i].children = []; // initialize the children
+    }
+    for (i = 0; i < list.length; i += 1) {
+        node = list[i];
+        console.log(node)
+        console.log(node.parentAreaRef)
+        if (node.parentAreaRef.id !== "0") {
+            node._id=Number(node._id)
+            node.parentAreaRef.id=Number(node.parentAreaRef.id)
+            console.log(list[map[node.parentAreaRef]])
+            list[map[node.parentAreaRef.id]].children.push(node);
+            console.log(roots)
+        } else {
+            roots.push(node);
+        }
+    }
+    return roots;
+}
 
 $('#upload_scraped').click(function() {
   console.log('up')
@@ -871,50 +892,50 @@ function findObjectById(root, id) {
     }
 };
 
-// function centerNode(source) {
-//   var zoomListener = d3.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
-//   t = d3.zoomTransform(d3.select("#container").node());
-//   x = -source.y0;
-//   y = -source.x0;
-//   x = x * t.k + viewerWidth / 2;
-//   y = y * t.k + viewerHeight / 2;
-//   console.log(x)
-//   console.log(y)
-//   d3.select('svg').transition().duration(duration).call( zoomListener.transform, d3.zoomIdentity.translate(x,y).scale(t.k) );
-// }
+function centerNode(source) {
+  var zoomListener = d3.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+  t = d3.zoomTransform(d3.select("#container").node());
+  x = -source.y0;
+  y = -source.x0;
+  x = x * t.k + viewerWidth / 2;
+  y = y * t.k + viewerHeight / 2;
+  console.log(x)
+  console.log(y)
+  d3.select('svg').transition().duration(duration).call( zoomListener.transform, d3.zoomIdentity.translate(x,y).scale(t.k) );
+}
 
 function zoom() {
     svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
-function centerNode(source) {
+// function centerNode(source) {
 
-  var width_update=localStorage.getItem('width');
-  var height_update=localStorage.getItem('height');
-  var margin = {top: 20, right: 120, bottom: 20, left: 120},
-            width = Number(width_update) - margin.right - margin.left,
-            height = Number(height_update) - margin.top - margin.bottom;
-    var zoomListener = d3.behavior.zoom().scaleExtent([width, height]).on("zoom", zoom);
-    scale = zoomListener.scale();
-    x = -source.x;
-    y = -source.y;
-    console.log('look here')
-    console.log(x)
-    x = x * scale + width/2;
-    y = y * scale + height/2;
-    d3.select("#container").transition()
-        .duration(750)
-        .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-    zoomListener.scale(scale);
-    zoomListener.translate([x, y]);
-}
+//   var width_update=localStorage.getItem('width');
+//   var height_update=localStorage.getItem('height');
+//   var margin = {top: 20, right: 120, bottom: 20, left: 120},
+//             width = Number(width_update) - margin.right - margin.left,
+//             height = Number(height_update) - margin.top - margin.bottom;
+//     var zoomListener = d3.behavior.zoom().scaleExtent([width, height]).on("zoom", zoom);
+//     scale = zoomListener.scale();
+//     x = -source.x;
+//     y = -source.y;
+//     console.log('look here')
+//     console.log(x)
+//     x = x * scale + width/2;
+//     y = y * scale + height/2;
+//     d3.select("#container").transition()
+//         .duration(750)
+//         .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+//     zoomListener.scale(scale);
+//     zoomListener.translate([x, y]);
+// }
 
 
 function searchTree(element, matchingTitle){
     console.log('is this working?')
     console.log(element.name)
-     if(element.name == matchingTitle){
-          console.log(element)
+     if(element.name === matchingTitle){
+          console.log(element.name)
           return element;
      }else if (element.children != null){
           var i;
@@ -924,7 +945,6 @@ function searchTree(element, matchingTitle){
           }
           return result;
      }
-     return null;
 }
 
 $("#search").click(function() {
