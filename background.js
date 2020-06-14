@@ -600,10 +600,18 @@ $('#upload').click(function() {
         {
             if(rawFile.status === 200 || rawFile.status == 0)
             {
+              try{
                 var allText = rawFile.responseText;
-                console.log(allText.slice(23700,23800));
-                console.log(allText.slice(8090,8110));
                 var tree=JSON.parse(allText);
+              }catch(err){
+                console.log(err.message)
+                var message=err.message;
+                var regex = /\d+/g;
+                var matches = message.match(regex)
+                console.log(matches)
+                var allText = rawFile.responseText;
+                alert('Unrecognised character(s) at this part of the file: "'+allText.slice(Number(matches[0]),Number(matches[0])+100)+'"')
+              }
                 var treenew=flatten([tree]);
                 console.log(treenew);
                 var width=localStorage.getItem('width');
