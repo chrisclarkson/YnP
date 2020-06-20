@@ -1174,18 +1174,7 @@ function update(treeData,just_loaded,width_update,height_update) {
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    .attr("xmlns", "chrome-extension://omgabkdfhmnjnifpeobfghhlfijegomi/popup.html")
-    .on("keydown", function() {
-        svg.append("text")
-            .attr("x","5")
-            .attr("y","150")
-            .style("font-size","50px")
-            .text("keyCode: " + say())  
-          .transition().duration(2000)
-            .style("font-size","5px")
-            .style("fill-opacity",".1")
-          .remove();
-    });
+    .attr("xmlns", "chrome-extension://omgabkdfhmnjnifpeobfghhlfijegomi/popup.html");
   if(just_loaded==='just_loaded'){
       console.log('just_loaded');
       //svg.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
