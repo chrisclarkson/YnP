@@ -57,6 +57,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         linkback:elem,
         number:number
     })
+	}else if(message.action==='geturl'){
+		var url=window.location.href
+		console.log('djkl;aj')
+		console.log(url)
+		sendResponse({
+        	url:url
+    })
 	}else if(message.action==='scrollto'){
 		console.log('not ready')
 		console.log('ready')

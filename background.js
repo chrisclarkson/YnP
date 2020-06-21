@@ -219,9 +219,8 @@ $('#pic').click(function(){
 })
 
 
-
-$('#remove').click(function(){
-var pos=localStorage.getItem('branch_in_store');
+remove_node=function(){
+  var pos=localStorage.getItem('branch_in_store');
     console.log(pos);
     var tree = JSON.parse(localStorage.getItem('tree_in_store'));
     for(var i = 0; i < tree.length; i++) {
@@ -241,6 +240,10 @@ var pos=localStorage.getItem('branch_in_store');
     update(treenew,'reload',width,height);
     //update(treenew,'reload')
     get_rid_of_duplicate_text_areas();
+}
+
+$('#remove').click(function(){
+  remove_node();
 });
 
 function plotHistogram(element, input) {
@@ -404,8 +407,7 @@ function add_score(done_yet){
   }
 }
 
-
-$('#btnCreate').click(function() {
+getit=function(){
     var msg={
       action:'gettext'
     }
@@ -485,6 +487,12 @@ $('#btnCreate').click(function() {
             });
           });
           get_rid_of_duplicate_text_areas()
+}
+
+
+
+$('#btnCreate').click(function() {
+            getit()
         });
 
 function connect() {
@@ -1279,9 +1287,73 @@ say=function(){
 }
 
 
+
+myFunction=function() {
+  
+}
+
+add_link=function(){
+  var done_yet=localStorage.getItem('done_yet')
+  if(done_yet==='already_done'){
+    localStorage.setItem('done_yet','not_done')
+  }else{
+    var msg={
+        action:'geturl'
+      }
+  chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, msg, function(response) {
+        console.log('the response')
+        console.log(response)
+          var url=response.url
+          console.log('the url')
+  console.log(url)
+  if(url){
+    var person = prompt("Please enter your name", url);
+    if (person != undefined) {
+      var pos=localStorage.getItem('branch_in_store');
+    console.log(pos);
+    var tree = JSON.parse(localStorage.getItem('tree_in_store'));
+    for(var i = 0; i < tree.length; i++) {
+        var datum = tree[i];
+        if(datum._id==pos){
+          var done_yet=localStorage.getItem('done_yet')
+          console.log('person')
+          console.log(person)
+          tree[i].linker=person
+        }
+      }
+      if(person!="no link"){
+        localStorage.setItem('tree_in_store',JSON.stringify(tree));
+        var treenew=make_tree(tree,idToNodeMap,root);
+        console.log('updated');
+        console.log(treenew);
+        var width=localStorage.getItem('width');
+        var height=localStorage.getItem('height');
+        update(treenew,'reload',width,height);
+        //update(treenew,'reload')
+        get_rid_of_duplicate_text_areas();
+    }
+    }
+  }
+  })
+  })
+  
+  localStorage.setItem('done_yet','already_done')
+  }
+}
+
 d3.select("body")
     .on("keydown", function() {
        say()
+       if (d3.event.shiftKey & d3.event.ctrlKey){
+          if(d3.event.keyCode===187){
+            getit()
+          }else if(d3.event.keyCode===189){
+            remove_node()
+          }else if(d3.event.keyCode===76){
+            add_link()
+          }
+        }
     });
 
 
