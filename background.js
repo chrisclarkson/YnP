@@ -266,19 +266,6 @@ function plotHistogram(element, input) {
       var value = function(d) {
         return d.value;
       };
-      // console.log(dataset);
-      // var hists=document.getElementById('scores_plot');
-      // console.log('dddddddddddd')
-      // console.log(hists)
-      // if(hists=="undefined" || hists=="null"|| hists==null || hists==undefined){
-      //   console.log('nothing there')
-      // }else{
-      //   console.log('remove old')
-      //   if(hists.getElementsByTagName('svg').length>0){
-      //     hists=document.getElementsByTagName('svg').getElementsByTagName('svg');
-      //     hists.remove();
-      //   }
-      // }
 
       var svg = d3.select(element)
             .append("svg")
@@ -1288,15 +1275,13 @@ say=function(){
 
 
 
-myFunction=function() {
-  
-}
+
 
 add_link=function(){
-  var done_yet=localStorage.getItem('done_yet')
-  if(done_yet==='already_done'){
-    localStorage.setItem('done_yet','not_done')
-  }else{
+  // var done_yet=localStorage.getItem('done_yet')
+  // if(done_yet==='already_done'){
+  //   localStorage.setItem('done_yet','not_done')
+  // }else{
     var msg={
         action:'geturl'
       }
@@ -1338,8 +1323,8 @@ add_link=function(){
   })
   })
   
-  localStorage.setItem('done_yet','already_done')
-  }
+  // localStorage.setItem('done_yet','already_done')
+  // }
 }
 
 d3.select("body")
@@ -1347,7 +1332,92 @@ d3.select("body")
        say()
        if (d3.event.shiftKey & d3.event.ctrlKey){
           if(d3.event.keyCode===187){
-            getit()
+            // var done_yet=localStorage.getItem('done_yet')
+            // if(done_yet==='already_done'){
+            //   localStorage.setItem('done_yet','not_done')
+            // }else{
+              //getit()
+              //localStorage.setItem('done_yet','already_done')
+            //}
+            var msg={
+      action:'gettext'
+    }
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, msg, function(response) {
+          if(response){
+          console.log(response)
+            //console.log(response.response);//You have to choose which part of the response you want to display ie. response.response
+            if(response.response!=""){
+            var sentence = response.response;
+          }
+            var linkback = response.linkback;
+            var linker = response.linker;
+            var number=response.number;
+            var cat=response.cat;
+          }
+            if(sentence=="undefined" || sentence=="null"|| sentence==null || sentence==undefined){
+              console.log('no input')
+            }else{
+              var sentences=sentence.match(/.{1,100}/g);
+              var sentence=sentences.join('\n')
+            }
+            newData=JSON.parse(localStorage.getItem('tree_in_store'));
+            //newData=newData.pop();
+            //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
+            var pos=localStorage.getItem('branch_in_store')
+            console.log('position')
+            console.log(pos)
+            if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
+            console.log(colour)
+          if(sentence){
+            newData.push({"_id": Number(localStorage.getItem('counter'))+1,
+                                "parentAreaRef": {"id":pos},
+                                "text": sentence,
+                                "name": sentence.substr(0,9),
+                                "status":colour,
+                                "linker":linker,
+                                "linkback":linkback,
+                                "number":number,
+                                "cat":cat,
+                                'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
+                              })
+          }else{
+            newData.push({"_id": Number(localStorage.getItem('counter'))+1,
+                                "parentAreaRef": {"id":pos},
+                                "text": "empty",
+                                "name": "empty",
+                                "status":colour,
+                                'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
+                              })
+          }
+            var last_element = newData[newData.length - 1];
+            last_element._id=Number(last_element._id)-1
+            console.log('why isnt this changing')
+            console.log(last_element._id)
+            var second_last = newData[newData.length - 2];
+            console.log('checking for duplicate')
+            console.log(last_element)
+            console.log(second_last)
+            if((last_element._id-1)===second_last._id){
+              newData.pop();
+              console.log('duplicate')
+          }else{
+            console.log('not duplicate')
+          }
+            console.log('newdata')
+            console.log(newData)
+            localStorage.setItem('tree_in_store',JSON.stringify(newData))
+            console.log('add node')
+            var v=make_tree(newData,idToNodeMap,root)
+            console.log(v)
+            var width=localStorage.getItem('width')
+            var height=localStorage.getItem('height')
+            update(v,'reload',width,height)
+            //update(v,'reload')
+            localStorage.setItem('counter', Number(localStorage.getItem('counter'))+1)
+            });
+          });
+          get_rid_of_duplicate_text_areas()
           }else if(d3.event.keyCode===189){
             remove_node()
           }else if(d3.event.keyCode===76){
@@ -1355,20 +1425,6 @@ d3.select("body")
           }
         }
     });
-
-
-
-// Toggle children on click.
-// function click(d) {
-//   if (d.children) {
-//   d._children = d.children;
-//   d.children = null;
-//   } else {
-//   d.children = d._children;
-//   d._children = null;
-//   }
-//   update(d);
-// }
 
 
 
@@ -1410,94 +1466,7 @@ d3.select('#saveButton').on('click', function(){
 
 // Below are the functions that handle actual exporting:
 // getSVGString ( svgNode ) and svgString2Image( svgString, width, height, format, callback )
-function getSVGString( svgNode ) {
-  svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-  var cssStyleText = getCSSStyles( svgNode );
-  appendCSS( cssStyleText, svgNode );
 
-  var serializer = new XMLSerializer();
-  var svgString = serializer.serializeToString(svgNode);
-  svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
-  svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
-
-  return svgString;
-
-  function getCSSStyles( parentElement ) {
-    var selectorTextArr = [];
-
-    // Add Parent element Id and Classes to the list
-    selectorTextArr.push( '#'+parentElement.id );
-    for (var c = 0; c < parentElement.classList.length; c++)
-        if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
-          selectorTextArr.push( '.'+parentElement.classList[c] );
-
-    // Add Children element Ids and Classes to the list
-    var nodes = parentElement.getElementsByTagName("*");
-    for (var i = 0; i < nodes.length; i++) {
-      var id = nodes[i].id;
-      if ( !contains('#'+id, selectorTextArr) )
-        selectorTextArr.push( '#'+id );
-
-      var classes = nodes[i].classList;
-      for (var c = 0; c < classes.length; c++)
-        if ( !contains('.'+classes[c], selectorTextArr) )
-          selectorTextArr.push( '.'+classes[c] );
-    }
-
-    // Extract CSS Rules
-    var extractedCSSText = "";
-    for (var i = 0; i < document.styleSheets.length; i++) {
-      var s = document.styleSheets[i];
-      
-      try {
-          if(!s.cssRules) continue;
-      } catch( e ) {
-            if(e.name !== 'SecurityError') throw e; // for Firefox
-            continue;
-          }
-
-      var cssRules = s.cssRules;
-      for (var r = 0; r < cssRules.length; r++) {
-        if ( contains( cssRules[r].selectorText, selectorTextArr ) )
-          extractedCSSText += cssRules[r].cssText;
-      }
-    }
-    
-
-    return extractedCSSText;
-
-    function contains(str,arr) {
-      return arr.indexOf( str ) === -1 ? false : true;
-    }
-  }
-  function appendCSS( cssText, element ) {
-    var styleElement = document.createElement("style");
-    styleElement.setAttribute("type","text/css"); 
-    styleElement.innerHTML = cssText;
-    var refNode = element.hasChildNodes() ? element.children[0] : null;
-    element.insertBefore( styleElement, refNode );
-  }
-}
-
-
-function svgString2Image( svgString, width, height, format, callback ) {
-  var format = format ? format : 'png';
-  var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
-  var canvas = document.createElement("canvas");
-  var context = canvas.getContext("2d");
-  canvas.width = width;
-  canvas.height = height;
-  var image = new Image();
-  image.onload = function() {
-    context.clearRect ( 0, 0, width, height );
-    context.drawImage(image, 0, 0, width, height);
-    canvas.toBlob( function(blob) {
-      var filesize = Math.round( blob.length/1024 ) + ' KB';
-      if ( callback ) callback( blob, filesize );
-    });
-  };
-  image.src = imgsrc;
-}
 
 });
 
