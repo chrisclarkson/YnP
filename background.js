@@ -1340,10 +1340,13 @@ d3.select("body")
               //localStorage.setItem('done_yet','already_done')
             //}
             var msg={
-      action:'gettext'
-    }
+              action:'gettext'
+            }
+            console.log('1fklsdjlkdfjl;')
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+            console.log('2jfkldsajfl;jldasjl;dafs')
         chrome.tabs.sendMessage(tabs[0].id, msg, function(response) {
+          console.log('3jkdfl;ajlf;dskaj;')
           if(response){
           console.log(response)
             //console.log(response.response);//You have to choose which part of the response you want to display ie. response.response
@@ -1362,6 +1365,7 @@ d3.select("body")
               var sentence=sentences.join('\n')
             }
             newData=JSON.parse(localStorage.getItem('tree_in_store'));
+            console.log('4fjklajfdlslfd;a')
             //newData=newData.pop();
             //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
             var pos=localStorage.getItem('branch_in_store')
@@ -1369,7 +1373,9 @@ d3.select("body")
             console.log(pos)
             if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
             console.log(colour)
+          console.log('5fjkdlsjdla')
           if(sentence){
+            console.log('6lkasdjl;;;;a')
             newData.push({"_id": Number(localStorage.getItem('counter'))+1,
                                 "parentAreaRef": {"id":pos},
                                 "text": sentence,
@@ -1382,6 +1388,7 @@ d3.select("body")
                                 'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
                               })
           }else{
+            console.log('6lkasdjl;;;;a')
             newData.push({"_id": Number(localStorage.getItem('counter'))+1,
                                 "parentAreaRef": {"id":pos},
                                 "text": "empty",
@@ -1390,6 +1397,7 @@ d3.select("body")
                                 'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
                               })
           }
+          console.log('7fkldasjl;;al')
             var last_element = newData[newData.length - 1];
             last_element._id=Number(last_element._id)-1
             console.log('why isnt this changing')
@@ -1398,21 +1406,25 @@ d3.select("body")
             console.log('checking for duplicate')
             console.log(last_element)
             console.log(second_last)
-            if((last_element._id-1)===second_last._id){
-              newData.pop();
-              console.log('duplicate')
-          }else{
-            console.log('not duplicate')
-          }
-            console.log('newdata')
-            console.log(newData)
+          //   if((last_element._id-1)===second_last._id){
+          //     newData.pop();
+          //     console.log('duplicate')
+          // }else{
+          //   console.log('not duplicate')
+          // }
+            // console.log('newdata')
+            // console.log(newData)
+            console.log('8fkldasjl;;al')
             localStorage.setItem('tree_in_store',JSON.stringify(newData))
-            console.log('add node')
+            // console.log('add node')
             var v=make_tree(newData,idToNodeMap,root)
-            console.log(v)
+            //console.log(v)
             var width=localStorage.getItem('width')
             var height=localStorage.getItem('height')
+
+            console.log('9fkldasjl;;al')
             update(v,'reload',width,height)
+            console.log('10fkldasjl;;al')
             //update(v,'reload')
             localStorage.setItem('counter', Number(localStorage.getItem('counter'))+1)
             });
