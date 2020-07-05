@@ -1085,9 +1085,6 @@ function textshow(element) {
       div0.transition()
         .duration(200)
         .style("opacity", .9);
-      
-        // .style("left", (d3.event.pageX) + "px")
-        // .style("top", (d3.event.pageY - 28) + "px");
       div.transition()
         .duration(200)
         .style("opacity", .9);
@@ -1098,35 +1095,17 @@ function textshow(element) {
           document.getElementById('sup_img').className="col-lg-12"
           document.getElementById('text').className="col-lg-12"
           div0.html("<textarea style='width:200px;height:30px' >"+element.name+"</textarea>")
-          div.html("<textarea style='width:600px;height:100px' >"+element.text
-          +"</textarea>"
-          )
+          div.html("<textarea style='width:600px;height:100px' >"+element.text+"</textarea>")
         }else{
           console.log('there')
           document.getElementById('sup_img').className="col-xs-5"
           document.getElementById('text').className="col-sm-4"
           div0.html("<textarea style='width:100px;height:30px' >"+element.name+"</textarea>")
-        div.html("<textarea style='width:300px;height:100px' >"+element.text
-          +"</textarea>")
-          // .style("left", (d3.event.pageX) + "px")
-          // .style("top", (d3.event.pageY - 28) + "px");
+        div.html("<textarea style='width:300px;height:100px' >"+element.text+"</textarea>")
         }
           get_rid_of_duplicate_text_areas()
-          //$('.valid:nth-child(n+2)').remove();
-
     }
 
-  // var imgs = d3.select("#sup_img");
-  // if(element.pic){
-  // var pic = element.pic;
-  // console.log(pic);
-  // imgs.append("img")
-  //     .attr("xlink:href", "/Users/Deirdreclarkson/js/41.png")
-  //     .attr("x", "60")
-  //     .attr("y", "60")
-  //     .attr("width", "20")
-  //     .attr("height", "20");
-  //   }
 
 function showpic(element){
   if(element.pic){
@@ -1196,8 +1175,6 @@ function update(treeData,just_loaded,width_update,height_update) {
     .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
     .style("fill", function(d) { return d.status; })
     .on('click', function(element){
-      //clickHandler(element);
-      //centerNode(element)
       click(element);
       textshow(element);
       showpic(element);
@@ -1327,6 +1304,35 @@ add_link=function(){
   // }
 }
 
+
+
+
+var userid = '';
+var password = '';
+var windowReference;
+
+function promptForTwo() {
+  var w = 480, h = 340;
+
+  if (window.screen) {
+    w = screen.availWidth;
+    h = screen.availHeight;
+  }
+
+  var popW = 300, popH = 150;
+  var leftPos = (w-popW)/2, topPos = (h-popH)/2;
+
+  window.open('popup.htm','windowName','width=' + popW + ',height=' + popH + ',top=' + topPos + ',left=' + leftPos);
+
+  if (!windowReference.opener)
+    windowReference.opener = self;
+}
+
+function done() {
+  alert('userid = ' + userid + '\npassword = ' + password);
+}
+
+
 d3.select("body")
     .on("keydown", function() {
        say()
@@ -1406,19 +1412,9 @@ d3.select("body")
             console.log('checking for duplicate')
             console.log(last_element)
             console.log(second_last)
-          //   if((last_element._id-1)===second_last._id){
-          //     newData.pop();
-          //     console.log('duplicate')
-          // }else{
-          //   console.log('not duplicate')
-          // }
-            // console.log('newdata')
-            // console.log(newData)
             console.log('8fkldasjl;;al')
             localStorage.setItem('tree_in_store',JSON.stringify(newData))
-            // console.log('add node')
             var v=make_tree(newData,idToNodeMap,root)
-            //console.log(v)
             var width=localStorage.getItem('width')
             var height=localStorage.getItem('height')
 
@@ -1439,7 +1435,6 @@ d3.select("body")
               var linker=localStorage.getItem('linker');
               var number=localStorage.getItem('number');
               var cat =localStorage.getItem('cat');
-              //chrome.tabs.create({ url: linker, active: true});
                   var msg={
                     action:'scrollto',
                     linker:linker,
@@ -1447,23 +1442,19 @@ d3.select("body")
                     number:number,
                     cat:cat
                   }
-                // chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-                //   chrome.tabs.sendMessage(tabs[0].id, msg);
-                //   });
-                // chrome.tabs.create({ url: linker }, function(tab) {
-                //     //chrome.tabs.sendMessage(tab.id, msg);
-                //     connect(msg);
-                // });
                 chrome.tabs.create({ url: linker }, function(tab) {
-                // Why do you query, when tab is already given?
                 chrome.tabs.executeScript(tab.id, {file:"jquery-3.1.0.min.js"}, function() {
-                  // This executes only after jQuery has been injected and executed
                   chrome.tabs.executeScript(tab.id, {file:"content.js"}, function() {
-                    // This executes only after your content script executes
                     chrome.tabs.sendMessage(tab.id, msg);
                   });
                 });
               });
+          }else if(d3.event.keyCode===69){
+            console.log('edit')
+           promptForTwo();
+            // var myName = prompt("Name Here:","")
+            // var myAge = prompt("Age Here:","")
+            // alert(myName +", you are "+ myAge +" years old!")
           }
         }
     });
