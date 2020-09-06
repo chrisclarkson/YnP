@@ -75,6 +75,8 @@ function get_rid_of_duplicate_text_areas(){
         }
       }
     }
+    console.log('dfkla;jfl;ads')
+    console.log(l)
     var textareas=document.getElementsByClassName('tooltip')
     var l=textareas.length
     console.log('length');
@@ -1076,6 +1078,7 @@ var toggleColor = (function(){
 
 
 function textshow(element) {
+  console.log('1')
   var div0 = d3.select("#text").append("div")
     .attr("class", "tooltip0")
     .style("opacity", 0);
@@ -1090,18 +1093,21 @@ function textshow(element) {
         .style("opacity", .9);
         var img_container=document.getElementById('sup_img')
         var im =img_container.firstElementChild
+        console.log('2')
         if(im==="undefined" || im=="null"|| im==null || im==undefined){
+          console.log('3')
           console.log('here')
           document.getElementById('sup_img').className="col-lg-12"
           document.getElementById('text').className="col-lg-12"
-          div0.html("<textarea style='width:200px;height:30px' >"+element.name+"</textarea>")
-          div.html("<textarea style='width:600px;height:100px' >"+element.text+"</textarea>")
+          div0.html("<textarea spellcheck='false' style='width:200px;height:30px' >"+element.name+"</textarea>")
+          div.html("<textarea spellcheck='false' style='width:600px;height:100px' >"+element.text+"</textarea>")
         }else{
+          console.log('4')
           console.log('there')
           document.getElementById('sup_img').className="col-xs-5"
           document.getElementById('text').className="col-sm-4"
-          div0.html("<textarea style='width:100px;height:30px' >"+element.name+"</textarea>")
-        div.html("<textarea style='width:300px;height:100px' >"+element.text+"</textarea>")
+          div0.html("<textarea spellcheck='false' style='width:100px;height:30px' >"+element.name+"</textarea>")
+        div.html("<textarea spellcheck='false' style='width:300px;height:100px' >"+element.text+"</textarea>")
         }
           get_rid_of_duplicate_text_areas()
     }
@@ -1126,7 +1132,9 @@ function showpic(element){
         textareas.innerHTML='<img src="file://localhost'+element.pic+'" height="200" alt="Image preview...">';
       }
   }else{
+    //if(im!=null){
     document.getElementById('sup_img').querySelector('img').remove();
+  //}
   }
 }
 
@@ -1451,7 +1459,7 @@ d3.select("body")
               });
           }else if(d3.event.keyCode===69){
             console.log('edit')
-           promptForTwo();
+           //promptForTwo();
             // var myName = prompt("Name Here:","")
             // var myAge = prompt("Age Here:","")
             // alert(myName +", you are "+ myAge +" years old!")

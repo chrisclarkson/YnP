@@ -1,0 +1,34 @@
+<html>
+
+<head>
+
+<script><!--
+function prompts(form) {
+  opener.userid = form.userid.value;
+  opener.password = form.password.value;
+  opener.done();
+  self.close();
+  return false;
+}
+
+function cancel() {
+ self.close();
+  return false;
+}
+//--></script>
+
+</head>
+
+<body onLoad="document.myform.userid.focus()">
+
+<form name="myForm" onSubmit="return prompts(this)" onReset="cancel()">
+Userid: <input type="text" name="userid">
+<br>
+Password: <input type="password" name="password">
+<br>
+<input type="submit" value="  ok  "> <input type="reset" value="  cancel  ">
+</form>
+
+</body>
+
+</html>
