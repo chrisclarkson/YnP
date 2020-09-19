@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="app.css" />
 <link rel="stylesheet" href="d3-context-menu.css" />
 </head>
-<body>
+<body style="width:780px; height:580px">
         <div id="RenameNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
           <h2 id="modalTitle">Rename Node</h2>
           <form id="RenameNodeForm">
@@ -61,46 +61,7 @@
         <script src="jquery.js"></script>
         <script src="fastclick.js"></script>
         <script src="foundation.min.js"></script>
-        <script>
-                // for the first initialization
-                $('document').ready(function(){
-                    $(document).foundation();
-                    $(document).on('opened', '[data-reveal]', function () {
-                        var element = $(".inputName:visible").first();
-                        element.focus(function(){
-                            this.selectionStart = this.selectionEnd = this.value.length;
-                        });
-                        element.focus();
-                    });
-                    $('#RenameNodeForm').submit(function(e){
-                            rename_node();
-                            return false;
-                    });
-                    $('#CreateNodeForm').submit(function(e){
-                            create_node();
-                            return false;
-                    });
-                    // function readTextFile(file, callback) {
-                    //     var rawFile = new XMLHttpRequest();
-                    //     rawFile.overrideMimeType("application/json");
-                    //     rawFile.open("GET", file, true);
-                    //     rawFile.onreadystatechange = function() {
-                    //         if (rawFile.readyState === 4 && rawFile.status == "200") {
-                    //             callback(rawFile.responseText);
-                    //         }
-                    //     }
-                    //     rawFile.send(null);
-                    // }
-
-                    // //usage:
-                    // readTextFile("/Users/Deirdreclarkson/js/adamfeuer/tree.json", function(text){
-                    //     var data = JSON.parse(text);
-                    //     console.log(data);
-                    //     draw_tree(text)
-                    // });
-                    var treeJSON = d3.json("/Users/Deirdreclarkson/js/adamfeuer/tree.json", draw_tree);
-                });
-        </script>
+        <script src="init.js"></script>
 </body>
 </html>
 

@@ -4,20 +4,23 @@
     "name": "Navigation Visualisation",
     "version": "1.0",
     "description": "Create a visualisation of your web navigation actions.",
-
     "browser_action":
       {
           "default_icon": "YnP48.png",
           "default_popup" : "adamfeuer/index.html",
           "default_title" : "Navigation Visualisation"
       },
-
      "background":
      {
-        "scripts": ["vakata-jstree-c9d7c14/src/jstree.js","jquery-3.1.0.min.js","background.js"],
+        "scripts": ["adamfeuer/d3.v3.min.js",
+        "adamfeuer/dndTree.js",
+        "adamfeuer/d3-context-menu.js",
+        "adamfeuer/underscore-min.js",
+        "adamfeuer/jquery.js",
+        "adamfeuer/fastclick.js",
+        "adamfeuer/foundation.min.js"],
         "persistent": true
      },
-
     "permissions":
       [
         "tabs", "<all_urls>", "activeTab","downloads"
