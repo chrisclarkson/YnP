@@ -59,6 +59,11 @@ function rename_node() {
 
 outer_update = null;
 
+document.getElementById("renamer").addEventListener("click", rename_node);
+document.getElementById("creator").addEventListener("click", create_node);
+
+
+
 function draw_tree(error,treeData) {
 
     // Calculate total nodes, max label length
