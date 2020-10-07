@@ -1,3 +1,4 @@
+
 function close_modal() {
         $(document).foundation('reveal', 'close');
 }
@@ -40,7 +41,7 @@ function create_node() {
                 create_node_modal_active = false;
                 $('#CreateNodeName').val('');
 
-        }
+        } 
         close_modal();
         outer_update(create_node_parent);
 }
@@ -65,7 +66,8 @@ document.getElementById("creator").addEventListener("click", create_node);
 
 
 function draw_tree(error,treeData) {
-
+    console.log('hhshshsh')
+    console.log(treeData)
     // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
@@ -79,19 +81,30 @@ function draw_tree(error,treeData) {
     var i = 0;
     var duration = 750;
     var root;
-
+    //document.getElementById("tree-container").style.width = "780px";
+    //document.getElementById("tree-container").style.height = "580px";
+    // var d = document.getElementById('tree-container');
+    // d.style.position = "absolute";
+    // d.style.left = '300px';
+    //d.style.top = '400px';
     // size of the diagram
+    //var viewerWidth = document.getElementById("tree-container").style.width;
+    //var viewerHeight = document.getElementById("tree-container").style.height;
+    // var viewerWidth = 200;
+    // var viewerHeight = 150;
     var viewerWidth = $(document).width();
     var viewerHeight = $(document).height();
-
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
+    console.log('tree');
+    console.log(tree);
 
     // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
         .projection(function(d) {
             return [d.y, d.x];
         });
+
 
     var menu = [
             {
@@ -258,6 +271,8 @@ function draw_tree(error,treeData) {
     }
 
     // define the baseSvg, attaching a class for styling and the zoomListener
+    var textareas=document.getElementById('tree-container').getElementsByTagName('svg');
+    if(textareas.length>0){textareas[0].remove()}
     var baseSvg = d3.select("#tree-container").append("svg")
         .attr("width", viewerWidth)
         .attr("height", viewerHeight);
@@ -506,6 +521,10 @@ function draw_tree(error,treeData) {
             // Normalize for fixed-depth by commenting out below line
             d.y = (d.depth * 300); //500px per level.
         });
+        console.log('nodes');
+        console.log(nodes);
+        // var filters2 = JSON.stringify(nodes)
+        // localStorage.setItem('tree_in_store', filters2);
 
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
@@ -520,7 +539,7 @@ function draw_tree(error,treeData) {
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on('click', click);
+            .on('dblclick', click);
 
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
@@ -655,6 +674,7 @@ function draw_tree(error,treeData) {
 
     // Define the root
     root = treeData;
+    console.log(root)
     root.x0 = viewerHeight / 2;
     root.y0 = 0;
 
@@ -662,5 +682,8 @@ function draw_tree(error,treeData) {
     update(root);
     centerNode(root);
     tree_root = root;
+    console.log(tree_root);
+    // var filters2 = JSON.stringify(tree_root);
+    // localStorage.setItem('tree_in_store', filters2);
 }
 
