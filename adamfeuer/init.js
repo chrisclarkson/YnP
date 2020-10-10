@@ -150,27 +150,7 @@ $('document').ready(function(){
               "text": "Parent-1",
               "name": "Parent-1",
               "status":"blue"
-            },
-            {name: "Theory",
-            parentAreaRef: {id: "p1"},
-            status: "blue",
-            _id: 1},
-            {name: "Practice",
-            parentAreaRef: {id: "p1"},
-            status: "blue",
-            _id: 2},
-            {name: "the implementation",
-            parentAreaRef: {id: 2},
-            status: "blue",
-            _id: 3},
-            {name: "more details",
-            parentAreaRef: {id: 2},
-            status: "blue",
-            _id: 4},
-            {name: "details",
-            parentAreaRef: {id: 1},
-            status: "blue",
-            _id: 5}
+            }
             ];
       var filters2 = JSON.stringify(d);
       localStorage.setItem('tree_in_store', filters2);

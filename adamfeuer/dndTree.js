@@ -42,7 +42,7 @@ function create_node() {
                 $('#CreateNodeName').val('');
 
         } 
-        close_modal();
+        //close_modal();
         outer_update(create_node_parent);
 }
 
@@ -54,7 +54,7 @@ function rename_node() {
                 rename_node_modal_active = false;
 
         }
-        close_modal();
+        //close_modal();
         outer_update(node_to_rename);
 }
 
@@ -66,8 +66,8 @@ document.getElementById("creator").addEventListener("click", create_node);
 
 
 function draw_tree(error,treeData) {
-    console.log('hhshshsh')
-    console.log(treeData)
+    console.log('hhshshsho');
+    console.log(treeData);
     // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
@@ -81,19 +81,9 @@ function draw_tree(error,treeData) {
     var i = 0;
     var duration = 750;
     var root;
-    //document.getElementById("tree-container").style.width = "780px";
-    //document.getElementById("tree-container").style.height = "580px";
-    // var d = document.getElementById('tree-container');
-    // d.style.position = "absolute";
-    // d.style.left = '300px';
-    //d.style.top = '400px';
-    // size of the diagram
-    //var viewerWidth = document.getElementById("tree-container").style.width;
-    //var viewerHeight = document.getElementById("tree-container").style.height;
-    // var viewerWidth = 200;
-    // var viewerHeight = 150;
-    var viewerWidth = $(document).width();
-    var viewerHeight = $(document).height();
+
+    var viewerWidth = $(document).width()/3;
+    var viewerHeight = $(document).height()/3;
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     console.log('tree');
@@ -210,23 +200,23 @@ function draw_tree(error,treeData) {
             scale = zoomListener.scale();
             svgGroup.transition().attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale + ")");
             d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")");
-            zoomListener.scale(zoomListener.scale());
-            zoomListener.translate([translateX, translateY]);
-            panTimer = setTimeout(function() {
-                pan(domNode, speed, direction);
-            }, 50);
+            // zoomListener.scale(zoomListener.scale());
+            // zoomListener.translate([translateX, translateY]);
+            // // panTimer = setTimeout(function() {
+            //     pan(domNode, speed, direction);
+            // }, 50);
         }
     }
 
     // Define the zoom function for the zoomable tree
 
     function zoom() {
-        svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        svgGroup.attr("transform", "translate(" + d3.event.translate + ")");
     }
 
 
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-    var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+    var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 1]).on("zoom", zoom);
 
     function initiateDrag(d, domNode) {
         draggingNode = d;
@@ -306,27 +296,27 @@ function draw_tree(error,treeData) {
             }
 
             // get coords of mouseEvent relative to svg container to allow for panning
-            relCoords = d3.mouse($('svg').get(0));
-            if (relCoords[0] < panBoundary) {
-                panTimer = true;
-                pan(this, 'left');
-            } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
+            // relCoords = d3.mouse($('svg').get(0));
+            // if (relCoords[0] < panBoundary) {
+            //     panTimer = true;
+            //     pan(this, 'left');
+            // } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
 
-                panTimer = true;
-                pan(this, 'right');
-            } else if (relCoords[1] < panBoundary) {
-                panTimer = true;
-                pan(this, 'up');
-            } else if (relCoords[1] > ($('svg').height() - panBoundary)) {
-                panTimer = true;
-                pan(this, 'down');
-            } else {
-                try {
-                    clearTimeout(panTimer);
-                } catch (e) {
+            //     panTimer = true;
+            //     pan(this, 'right');
+            // } else if (relCoords[1] < panBoundary) {
+            //     panTimer = true;
+            //     pan(this, 'up');
+            // } else if (relCoords[1] > ($('svg').height() - panBoundary)) {
+            //     panTimer = true;
+            //     pan(this, 'down');
+            // } else {
+            //     try {
+            //         clearTimeout(panTimer);
+            //     } catch (e) {
 
-                }
-            }
+            //     }
+            // }
 
             d.x0 += d3.event.dy;
             d.y0 += d3.event.dx;
@@ -463,8 +453,8 @@ function draw_tree(error,treeData) {
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
             .duration(duration)
-            .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
-        zoomListener.scale(scale);
+            .attr("transform", "translate(" + x + "," + y + ")");
+        //zoomListener.scale(scale);
         zoomListener.translate([x, y]);
     }
 
@@ -508,7 +498,7 @@ function draw_tree(error,treeData) {
         };
         childCount(0, root);
         var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line  
-        tree = tree.size([newHeight, viewerWidth]);
+        tree = tree.size([viewerHeight, viewerWidth]);
 
         // Compute the new tree layout.
         var nodes = tree.nodes(root).reverse(),
