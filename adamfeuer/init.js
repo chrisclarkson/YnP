@@ -68,6 +68,7 @@ $('document').ready(function(){
                 root = datum;
             } else {
                 parentNode = idToNodeMap[datum.parentAreaRef.id];
+                console.log(parentNode);
                 parentNode.children.push(datum);
             }
         }

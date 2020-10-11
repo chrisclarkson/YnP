@@ -32,7 +32,7 @@ function create_node() {
                 name = $('#CreateNodeName').val();
                 new_node = { 'name': name, 
                              'id' :  id,
-                             'depth': create_node_parent.depth + 1,                           
+                             'depth': create_node_parent.depth + 1, 
                              'children': [], 
                              '_children':null 
                            };
@@ -42,8 +42,8 @@ function create_node() {
                 $('#CreateNodeName').val('');
 
         } 
-        //close_modal();
-        outer_update(create_node_parent);
+        close_modal();
+        outer_update(create_node_parent,adding=true);
 }
 
 function rename_node() {
@@ -54,8 +54,8 @@ function rename_node() {
                 rename_node_modal_active = false;
 
         }
-        //close_modal();
-        outer_update(node_to_rename);
+        close_modal();
+        outer_update(node_to_rename,renaming=true);
 }
 
 outer_update = null;
@@ -82,8 +82,8 @@ function draw_tree(error,treeData) {
     var duration = 750;
     var root;
 
-    var viewerWidth = $(document).width()/3;
-    var viewerHeight = $(document).height()/3;
+    var viewerWidth = $(document).width();
+    var viewerHeight = $(document).height();
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     console.log('tree');
@@ -154,12 +154,13 @@ function draw_tree(error,treeData) {
     });
 
     function delete_node(node) {
+        console.log('hehre')
         visit(treeData, function(d) {
                if (d.children) {
                        for (var child of d.children) {
                                if (child == node) {
                                        d.children = _.without(d.children, child);
-                                       update(root);
+                                       update(root,adding=false,deleting=true);
                                        break;
                                }
                        } 
@@ -199,19 +200,19 @@ function draw_tree(error,treeData) {
             scaleY = translateCoords.scale[1];
             scale = zoomListener.scale();
             svgGroup.transition().attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale + ")");
-            d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")");
-            // zoomListener.scale(zoomListener.scale());
-            // zoomListener.translate([translateX, translateY]);
-            // // panTimer = setTimeout(function() {
-            //     pan(domNode, speed, direction);
-            // }, 50);
+            d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")scale(" + scale + ")");
+            zoomListener.scale(zoomListener.scale());
+            zoomListener.translate([translateX, translateY]);
+            panTimer = setTimeout(function() {
+                pan(domNode, speed, direction);
+            }, 50);
         }
     }
 
     // Define the zoom function for the zoomable tree
 
     function zoom() {
-        svgGroup.attr("transform", "translate(" + d3.event.translate + ")");
+        svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     }
 
 
@@ -296,32 +297,32 @@ function draw_tree(error,treeData) {
             }
 
             // get coords of mouseEvent relative to svg container to allow for panning
-            // relCoords = d3.mouse($('svg').get(0));
-            // if (relCoords[0] < panBoundary) {
-            //     panTimer = true;
-            //     pan(this, 'left');
-            // } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
+            relCoords = d3.mouse($('svg').get(0));
+            if (relCoords[0] < panBoundary) {
+                panTimer = true;
+                pan(this, 'left');
+            } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
 
-            //     panTimer = true;
-            //     pan(this, 'right');
-            // } else if (relCoords[1] < panBoundary) {
-            //     panTimer = true;
-            //     pan(this, 'up');
-            // } else if (relCoords[1] > ($('svg').height() - panBoundary)) {
-            //     panTimer = true;
-            //     pan(this, 'down');
-            // } else {
-            //     try {
-            //         clearTimeout(panTimer);
-            //     } catch (e) {
+                panTimer = true;
+                pan(this, 'right');
+            } else if (relCoords[1] < panBoundary) {
+                panTimer = true;
+                pan(this, 'up');
+            } else if (relCoords[1] > ($('svg').height() - panBoundary)) {
+                panTimer = true;
+                pan(this, 'down');
+            } else {
+                try {
+                    clearTimeout(panTimer);
+                } catch (e) {
 
-            //     }
-            // }
+                }
+            }
 
             d.x0 += d3.event.dy;
             d.y0 += d3.event.dx;
             var node = d3.select(this);
-            node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")");
+            node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")scale(" + scale + ")");
             updateTempConnector();
         }).on("dragend", function(d) {
             if (d == root) {
@@ -453,8 +454,8 @@ function draw_tree(error,treeData) {
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
             .duration(duration)
-            .attr("transform", "translate(" + x + "," + y + ")");
-        //zoomListener.scale(scale);
+            .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+        zoomListener.scale(scale);
         zoomListener.translate([x, y]);
     }
 
@@ -476,14 +477,16 @@ function draw_tree(error,treeData) {
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
-        update(d);
+        update(d,adding=false,deleting=false);
         centerNode(d);
     }
 
-    function update(source) {
+    function update(source,adding=false,deleting=false,renaming=false) {
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
         // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
         // This makes the layout more consistent.
+        console.log('is this working')
+        console.log(adding)
         var levelWidth = [1];
         var childCount = function(level, n) {
 
@@ -513,6 +516,60 @@ function draw_tree(error,treeData) {
         });
         console.log('nodes');
         console.log(nodes);
+        if(adding){
+            console.log('heredsfds')
+                latest_node=nodes[0];
+                newData=JSON.parse(localStorage.getItem('tree_in_store'));
+                    //newData=newData.pop();
+                    //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
+                    var pos=localStorage.getItem('branch_in_store')
+                    console.log('position')
+                    console.log(pos)
+                    if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
+                    //console.log(latest_node['parent']['id'])
+                    if(latest_node['parent']['_id']){
+                        parent_id=latest_node['parent']['_id']
+                    }else{
+                        parent_id=latest_node['parent']['id']
+                    }
+                    console.log('parent_id')
+                    console.log(parent_id)
+                    newData.push({"_id": latest_node['id'],
+                                        "parentAreaRef": {'id':parent_id},
+                                        "children":[],
+                                        "text": null,
+                                        "name": latest_node['name'],
+                                        "status":"blue",
+                                        "linker":null,
+                                        "linkback":null,
+                                        "number":null,
+                                        "cat":null,
+                                        'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
+                                      })
+                    localStorage.setItem('tree_in_store',JSON.stringify(newData))
+                }else{console.log('just display1')}
+                if(deleting){
+                    console.log('hhhdhfddddd')
+                    // ordered_nodes=nodes.reverse();
+                    // console.log('ordered_nodes')
+                    // console.log(ordered_nodes)
+                    // for(var i = 0; i < ordered_nodes.length; i++){
+                    //     if(ordered_nodes[i]['parent']){
+                    //         ordered_nodes[i]["parentAreaRef"]={'id':ordered_nodes[i]['parent']['id']}
+                    //         //delete ordered_nodes[i]['parent'];
+                    //     }
+                    //     if(ordered_nodes[i]['id']){
+                    //         ordered_nodes[i]["_id"]=ordered_nodes[i]['id']
+                    //         //delete ordered_nodes[i]['id'];
+                    //     }
+                    //     ordered_nodes[i]["children"]=[]
+                    // }
+                    // console.log('correctly ordered_nodes')
+                    // console.log(ordered_nodes)
+                    
+                    // localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes));
+                }else{console.log('just display2')}
+
         // var filters2 = JSON.stringify(nodes)
         // localStorage.setItem('tree_in_store', filters2);
 
@@ -669,7 +726,7 @@ function draw_tree(error,treeData) {
     root.y0 = 0;
 
     // Layout the tree initially and center on the root node.
-    update(root);
+    update(root,deleting=false,adding=false,renaming=false);
     centerNode(root);
     tree_root = root;
     console.log(tree_root);
