@@ -631,6 +631,7 @@ function draw_tree(error,treeData) {
             .on('click', function(){
                 console.log('ssss');
                 console.log(d3.event.pageX);
+                
             });
 
         nodeEnter.append("circle")
