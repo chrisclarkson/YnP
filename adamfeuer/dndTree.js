@@ -19,6 +19,17 @@ function generateUUID(){
     return uuid;
 };
 
+function find_max(){
+  var tree=JSON.parse(localStorage.getItem('tree_in_store'));
+  list=[]
+  for(var i = 0; i < tree.length; i++){
+    list.push(Number(tree[i]['_id']))
+  }
+  var latest=d3.max(list)+1
+  localStorage.setItem('counter',latest);
+  return latest
+}
+
 function create_node() {
         if (create_node_parent && create_node_modal_active) {
                 if (create_node_parent._children != null)  {
@@ -28,10 +39,12 @@ function create_node() {
                 if (create_node_parent.children == null) {
                         create_node_parent.children = [];
                 }
-                id = generateUUID(); 
+                //id = generateUUID(); 
+                var id=find_max();
                 name = $('#CreateNodeName').val();
                 new_node = { 'name': name, 
                              'id' :  id,
+                             '_id':id,
                              'depth': create_node_parent.depth + 1, 
                              'children': [], 
                              '_children':null 
@@ -43,6 +56,8 @@ function create_node() {
 
         } 
         close_modal();
+        console.log('get node parent')
+        console.log(create_node_parent)
         outer_update(create_node_parent,adding=true);
 }
 
@@ -362,7 +377,8 @@ function draw_tree(error,treeData) {
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', '');
         updateTempConnector();
         if (draggingNode !== null) {
-            update(root);
+            console.log('fjjfjfjfjjfjfjfj');
+            update(root,adding=false,deleting='no',renaming=false);
             centerNode(draggingNode);
             draggingNode = null;
         }
@@ -516,9 +532,21 @@ function draw_tree(error,treeData) {
         });
         console.log('nodes');
         console.log(nodes);
+        console.log('adding')
+        console.log(adding);
         if(adding){
-            console.log('heredsfds')
-                latest_node=nodes[0];
+            console.log('heredsfds');
+                var latest_id=Number(localStorage.getItem('counter'));
+                console.log(latest_id);
+                for(var j = 0; j < nodes.length; j++){
+                    console.log(nodes[j]);
+                    if(Number(nodes[j]['_id'])===latest_id){
+                        console.log('dddd')
+                        console.log(nodes[j])
+                        var latest_node=nodes[j];
+                    }
+                }
+                
                 newData=JSON.parse(localStorage.getItem('tree_in_store'));
                     //newData=newData.pop();
                     //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
@@ -526,14 +554,14 @@ function draw_tree(error,treeData) {
                     console.log('position')
                     console.log(pos)
                     if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
-                    //console.log(latest_node['parent']['id'])
+                    console.log(latest_node)
                     if(latest_node['parent']['_id']){
                         parent_id=latest_node['parent']['_id']
                     }else{
                         parent_id=latest_node['parent']['id']
                     }
-                    console.log('parent_id')
-                    console.log(parent_id)
+                    console.log('parent_id');
+                    console.log(parent_id);
                     newData.push({"_id": latest_node['id'],
                                         "parentAreaRef": {'id':parent_id},
                                         "children":[],
@@ -546,28 +574,40 @@ function draw_tree(error,treeData) {
                                         "cat":null,
                                         'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
                                       })
-                    localStorage.setItem('tree_in_store',JSON.stringify(newData))
+                    localStorage.setItem('tree_in_store',JSON.stringify(newData));
                 }else{console.log('just display1')}
-                if(deleting){
-                    console.log('hhhdhfddddd')
-                    // ordered_nodes=nodes.reverse();
-                    // console.log('ordered_nodes')
-                    // console.log(ordered_nodes)
-                    // for(var i = 0; i < ordered_nodes.length; i++){
-                    //     if(ordered_nodes[i]['parent']){
-                    //         ordered_nodes[i]["parentAreaRef"]={'id':ordered_nodes[i]['parent']['id']}
-                    //         //delete ordered_nodes[i]['parent'];
-                    //     }
-                    //     if(ordered_nodes[i]['id']){
-                    //         ordered_nodes[i]["_id"]=ordered_nodes[i]['id']
-                    //         //delete ordered_nodes[i]['id'];
-                    //     }
-                    //     ordered_nodes[i]["children"]=[]
-                    // }
-                    // console.log('correctly ordered_nodes')
-                    // console.log(ordered_nodes)
-                    
-                    // localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes));
+                if(deleting || deleting==='yes'){
+                    console.log('hhhdhfddddd');
+                    ordered_nodes=nodes.reverse();
+                    console.log('ordered_nodes');
+                    console.log(ordered_nodes);
+                    ordered_nodes_new = ordered_nodes.map(ordered_node => {
+                        if(ordered_node['parent']){
+                             ordered_node["parentAreaRef"]={'id':ordered_node['parent']['_id']}
+                            delete ordered_node['parent'];
+                        }
+                        if(ordered_node['_id']===undefined){
+                            console.log('undefined id');
+                            console.log(ordered_nodes);
+                            ordered_node["_id"]=ordered_node['id'];
+                            delete ordered_node['id'];
+                        }
+                        return ordered_node
+                    })
+                    //for(var i = 0; i < ordered_nodes.length; i++){
+                        // if(ordered_nodes[i]['parent']){
+                        //     ordered_nodes[i]["parentAreaRef"]={'id':ordered_nodes[i]['parent']['id']}
+                        //     //delete ordered_nodes[i]['parent'];
+                        // }
+                        // if(ordered_nodes[i]['id']){
+                        //     ordered_nodes[i]["_id"]=ordered_nodes[i]['id']
+                        //     //delete ordered_nodes[i]['id'];
+                        // }
+                        // ordered_nodes[i]["children"]=[]
+                    //}
+                    console.log('correctly ordered_nodes');
+                    console.log(ordered_nodes_new);
+                    localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes_new));
                 }else{console.log('just display2')}
 
         // var filters2 = JSON.stringify(nodes)
@@ -579,6 +619,7 @@ function draw_tree(error,treeData) {
                 return d.id || (d.id = ++i);
             });
 
+            
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")
             .call(dragListener)
@@ -586,7 +627,11 @@ function draw_tree(error,treeData) {
             .attr("transform", function(d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
-            .on('dblclick', click);
+            .on('dblclick', click)
+            .on('click', function(){
+                console.log('ssss');
+                console.log(d3.event.pageX);
+            });
 
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
@@ -721,7 +766,7 @@ function draw_tree(error,treeData) {
 
     // Define the root
     root = treeData;
-    console.log(root)
+    console.log(root);
     root.x0 = viewerHeight / 2;
     root.y0 = 0;
 
