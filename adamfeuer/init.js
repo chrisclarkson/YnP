@@ -99,7 +99,16 @@ $('document').ready(function(){
       console.log('stored');
       var idToNodeMap = {};
       var root = null;
+      for(var j = 0; j < tree_in_store.length; j++){
+        if(tree_in_store[j]['id']){
+          delete tree_in_store[j]['id']
+        }
+        if(tree_in_store[j]['parent']){
+          delete tree_in_store[j]['parent']
+        }
+      }
       var tree=make_tree(tree_in_store,idToNodeMap,root);
+      
       console.log('here')
       console.log(tree_in_store)
       draw_tree(null,tree)

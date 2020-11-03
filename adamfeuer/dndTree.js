@@ -23,9 +23,18 @@ function find_max(){
   var tree=JSON.parse(localStorage.getItem('tree_in_store'));
   list=[]
   for(var i = 0; i < tree.length; i++){
-    list.push(Number(tree[i]['_id']))
+    if(tree[i]['_id']==='p1'){
+        console.log('parent')
+    }else{
+        list.push(Number(tree[i]['_id']))
+    }
   }
-  var latest=d3.max(list)+1
+  if(list.length<1){
+    var latest=2;
+  }else{
+    console.log(d3.max(list))
+    var latest=d3.max(list)+1
+  }
   localStorage.setItem('counter',latest);
   return latest
 }
@@ -54,7 +63,7 @@ function create_node() {
                 create_node_modal_active = false;
                 $('#CreateNodeName').val('');
 
-        } 
+        }
         close_modal();
         console.log('get node parent')
         console.log(create_node_parent)
@@ -67,7 +76,6 @@ function rename_node() {
                 console.log('New Node name: ' + name);
                 node_to_rename.name = name;
                 rename_node_modal_active = false;
-
         }
         close_modal();
         outer_update(node_to_rename,renaming=true);
@@ -81,6 +89,7 @@ document.getElementById("creator").addEventListener("click", create_node);
 
 
 function draw_tree(error,treeData) {
+    localStorage.setItem('text_removable','not_removable')
     console.log('hhshshsho');
     console.log(treeData);
     // Calculate total nodes, max label length
@@ -169,7 +178,7 @@ function draw_tree(error,treeData) {
     });
 
     function delete_node(node) {
-        console.log('hehre')
+        console.log('hehe')
         visit(treeData, function(d) {
                if (d.children) {
                        for (var child of d.children) {
@@ -275,11 +284,48 @@ function draw_tree(error,treeData) {
 
         dragStarted = null;
     }
-
+    // var dispatch = d3.dispatch('unhighlightAll')
+    //           .on('unhighlightAll', function() {
+    //             var textareas=d3.select('#texter');
+    //             if (textareas.length<1) {
+    //                 console.log('no need to remove')        
+    //             }else{
+    //                 textareas.remove()
+    //             }
+    //           });
     // define the baseSvg, attaching a class for styling and the zoomListener
     var textareas=document.getElementById('tree-container').getElementsByTagName('svg');
     if(textareas.length>0){textareas[0].remove()}
+    
     var baseSvg = d3.select("#tree-container").append("svg")
+        .on('click', function(d) {
+            console.log(d3.select(d3.event.target).classList)
+            console.log(this.classList)
+            // console.log('clicking svg')
+            // console.log(d)
+            // var removable=localStorage.getItem('removable')
+            // if(d===undefined & removable==='removable'){
+            //     console.log('got it');
+
+            // }
+
+            // var removable=localStorage.getItem('text_removable')
+            // if (removable==='removable'){
+            //     var textareas=d3.select('#texter');
+            //     if (textareas.length<1) {
+            //         console.log('no need to remove');
+            //     }else{
+            //         textareas.remove();
+            //     }
+            // }
+            if(d3.select(d3.event.target).classed('nodeCircle')){
+                    console.log('this should not happen')
+                     //localStorage.setItem('text_removable','removed');
+                }else{
+                    d3.select('#texter').remove();
+                }
+            
+        })
         .attr("width", viewerWidth)
         .attr("height", viewerHeight);
         
@@ -474,6 +520,23 @@ function draw_tree(error,treeData) {
         zoomListener.scale(scale);
         zoomListener.translate([x, y]);
     }
+    function centerNode_text(source) {
+        scale = zoomListener.scale();
+        x = -source.y0;
+        y = -source.x0;
+        console.log(x);
+        console.log(y);
+        x = x * scale + viewerWidth / 2;
+        y = y * scale + viewerHeight / 2;
+        console.log(x);
+        console.log(y)
+        d3.select('g').transition()
+            .duration(duration)
+            .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+        zoomListener.scale(scale);
+        zoomListener.translate([x, y]);
+        return [x, y]
+    }
 
     // Toggle children function
 
@@ -501,8 +564,8 @@ function draw_tree(error,treeData) {
         // Compute the new height, function counts total children of root node and sets tree height accordingly.
         // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
         // This makes the layout more consistent.
-        console.log('is this working')
-        console.log(adding)
+        console.log('is this working');
+        console.log(adding);
         var levelWidth = [1];
         var childCount = function(level, n) {
 
@@ -516,7 +579,7 @@ function draw_tree(error,treeData) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line  
+        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line 
         tree = tree.size([viewerHeight, viewerWidth]);
 
         // Compute the new tree layout.
@@ -541,8 +604,8 @@ function draw_tree(error,treeData) {
                 for(var j = 0; j < nodes.length; j++){
                     console.log(nodes[j]);
                     if(Number(nodes[j]['_id'])===latest_id){
-                        console.log('dddd')
-                        console.log(nodes[j])
+                        console.log('dddd');
+                        console.log(nodes[j]);
                         var latest_node=nodes[j];
                     }
                 }
@@ -554,7 +617,7 @@ function draw_tree(error,treeData) {
                     console.log('position')
                     console.log(pos)
                     if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
-                    console.log(latest_node)
+                    console.log(latest_node);
                     if(latest_node['parent']['_id']){
                         parent_id=latest_node['parent']['_id']
                     }else{
@@ -574,6 +637,14 @@ function draw_tree(error,treeData) {
                                         "cat":null,
                                         'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
                                       })
+                    for(var j = 0; j < newData.length; j++){
+                        if(newData[j]['id']){
+                          delete newData[j]['id']
+                        }
+                        if(newData[j]['parent']){
+                          delete newData[j]['parent']
+                        }
+                      }
                     localStorage.setItem('tree_in_store',JSON.stringify(newData));
                 }else{console.log('just display1')}
                 if(deleting || deleting==='yes'){
@@ -593,20 +664,17 @@ function draw_tree(error,treeData) {
                             delete ordered_node['id'];
                         }
                         return ordered_node
-                    })
-                    //for(var i = 0; i < ordered_nodes.length; i++){
-                        // if(ordered_nodes[i]['parent']){
-                        //     ordered_nodes[i]["parentAreaRef"]={'id':ordered_nodes[i]['parent']['id']}
-                        //     //delete ordered_nodes[i]['parent'];
-                        // }
-                        // if(ordered_nodes[i]['id']){
-                        //     ordered_nodes[i]["_id"]=ordered_nodes[i]['id']
-                        //     //delete ordered_nodes[i]['id'];
-                        // }
-                        // ordered_nodes[i]["children"]=[]
-                    //}
+                    });
                     console.log('correctly ordered_nodes');
                     console.log(ordered_nodes_new);
+                    for(var j = 0; j < ordered_nodes_new.length; j++){
+                        if(ordered_nodes_new[j]['id']){
+                          delete ordered_nodes_new[j]['id']
+                        }
+                        if(ordered_nodes_new[j]['parent']){
+                          delete ordered_nodes_new[j]['parent']
+                        }
+                      }
                     localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes_new));
                 }else{console.log('just display2')}
 
@@ -619,7 +687,18 @@ function draw_tree(error,treeData) {
                 return d.id || (d.id = ++i);
             });
 
-            
+        // var dispatch = d3.dispatch('unhighlightAll','toggleSingle')
+        //       .on('unhighlightAll', function() {
+        //         d3.selectAll('.clickable-circle').classed('highlighted', false);
+        //       })
+        //       .on('toggleSingle', function(el) {
+        //         // store state of current element
+        //         var highlighted = d3.select(el).classed('highlighted');
+        //         // unhighlight all
+        //         dispatch.unhighlightAll();
+        //         // set opposite of stored state
+        //         d3.select(el).classed('highlighted', !highlighted);
+        //       });
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")
             .call(dragListener)
@@ -628,10 +707,37 @@ function draw_tree(error,treeData) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
             .on('dblclick', click)
-            .on('click', function(){
+            .on('click', function(d){
+                console.log(d)
+                centerNode(d);
+                console.log(d3.select(d3.event.target).classed('nodeCircle'));
+                // x=centerNode_text(d)[0];
+                // y=centerNode_text(d)[1];
                 console.log('ssss');
                 console.log(d3.event.pageX);
-                
+                // var textBox = baseSvg.append("rect")
+                //     .attr("x", viewerWidth/2)
+                //     .attr("y", viewerHeight/2)
+                //     .attr("height", 100)
+                //     .attr("width", 140)
+                //     .style("stroke", "black")
+                //     .style("fill", "none")
+                //     .style("stroke-width", "2px");
+                // baseSvg.append("text")
+                //     .attr("x", (viewerWidth/2)+10)
+                //     .attr("y", (viewerHeight/2)+10)
+                //     .text(d.text)
+                // var removable=localStorage.getItem('text_removable');
+                if(d3.select(d3.event.target).classed('nodeCircle')){
+                    $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>')
+                    $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px"});
+                    //localStorage.setItem('text_removable','removed');
+                }else{
+                    d3.select('#texter').remove();
+                }
+
+                //     d3.select("#texter").classed("hidden", false);
+                // }
             });
 
         nodeEnter.append("circle")
@@ -770,7 +876,14 @@ function draw_tree(error,treeData) {
     console.log(root);
     root.x0 = viewerHeight / 2;
     root.y0 = 0;
-
+//     d3.select("body").on("click",function(){
+//     var textareas=d3.select('#texter');
+//     if (textareas.length<1) {
+//         console.log('no need to remove')        
+//     }else{
+//         textareas.remove()
+//     }
+// });
     // Layout the tree initially and center on the root node.
     update(root,deleting=false,adding=false,renaming=false);
     centerNode(root);
