@@ -2,9 +2,7 @@
   cursor: pointer;
 }
 
-.overlay{
-    background-color:#000;
-}
+
  
 .node circle {
   fill: #fff;

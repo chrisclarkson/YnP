@@ -24,7 +24,7 @@ function find_max(){
   list=[]
   for(var i = 0; i < tree.length; i++){
     if(tree[i]['_id']==='p1'){
-        console.log('parent')
+        console.log('parent');
     }else{
         list.push(Number(tree[i]['_id']))
     }
@@ -88,8 +88,8 @@ document.getElementById("creator").addEventListener("click", create_node);
 
 
 
-function draw_tree(error,treeData) {
-    localStorage.setItem('text_removable','not_removable')
+function draw_tree(error,treeData,width_percent=100,height_percent=100) {
+    localStorage.setItem('text_removable','not_removable');
     console.log('hhshshsho');
     console.log(treeData);
     // Calculate total nodes, max label length
@@ -105,9 +105,10 @@ function draw_tree(error,treeData) {
     var i = 0;
     var duration = 750;
     var root;
-
-    var viewerWidth = $(document).width();
-    var viewerHeight = $(document).height();
+    width_percent=Number(width_percent)/100;
+    height_percent=Number(height_percent)/100;
+    var viewerWidth = $(document).width()*width_percent;
+    var viewerHeight = $(document).height()*height_percent;
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     console.log('tree');
@@ -299,8 +300,8 @@ function draw_tree(error,treeData) {
     
     var baseSvg = d3.select("#tree-container").append("svg")
         .on('click', function(d) {
-            console.log(d3.select(d3.event.target).classList)
-            console.log(this.classList)
+            console.log(d3.select(d3.event.target).classList);
+            console.log(this.classList);
             // console.log('clicking svg')
             // console.log(d)
             // var removable=localStorage.getItem('removable')
@@ -323,7 +324,9 @@ function draw_tree(error,treeData) {
                      //localStorage.setItem('text_removable','removed');
                 }else{
                     d3.select('#texter').remove();
-                    d3.select('#picer').remove();
+                    if(d3.select('#picer')){
+                       d3.select('#picer').remove();
+                    }
                 }
             
         })
@@ -521,6 +524,7 @@ function draw_tree(error,treeData) {
         zoomListener.scale(scale);
         zoomListener.translate([x, y]);
     }
+
     function centerNode_text(source) {
         scale = zoomListener.scale();
         x = -source.y0;
@@ -851,6 +855,15 @@ function draw_tree(error,treeData) {
             d.x0 = d.x;
             d.y0 = d.y;
         });
+        var borderPath = baseSvg.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("height", viewerHeight)
+          .attr("width", viewerWidth)
+          .style("stroke", 'black')
+          .style("fill", "none")
+          .style("stroke-width", '4px');
+    
     }
 
     outer_update = update;

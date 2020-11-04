@@ -13,9 +13,16 @@
   left:500; /*[wherever you want it]
 }
 */
-#tree-container {
-  border: 5px outset red;
-  background-color: #000;
+#width {
+  display:inline-block;
+  width: 70px; 
+  height:30px; 
+}
+
+#height {
+  display:inline-block;
+  width: 70px; 
+  height:30px; 
 }
 </style>
 </style>
@@ -26,6 +33,10 @@
   <input type="button" id="upload" value="upload" />
   <input type="button" id="download" value="download"/>
   <input type="button" id="clear" value="clear"/>
+  </div>
+  <div>
+  <input type="text" id="height" placeholder="height %" id="height" size="2" height="30px" width="30px"/> <input type="text" id="width" placeholder="width %" id="width" size="2" height="30px" width="30px"/>
+  <input type="button" id="resize" size="8" value="resize" />
   </div>
         <div id="RenameNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
           <h2 id="modalTitle">Rename Node</h2>

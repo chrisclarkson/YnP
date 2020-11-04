@@ -19,6 +19,24 @@ $('document').ready(function(){
             create_node();
             return false;
     });
+    var width=$('#width').val()
+    if(width){
+      console.log(width)
+      localStorage.setItem('width',width)
+    }else{
+      var width=localStorage.getItem('width')
+      localStorage.setItem('width',width)
+    }
+    console.log('width')
+    console.log(width)
+    var height=$('#height').val()
+     if(height){
+      console.log(height)
+      localStorage.setItem('height',height)
+    }else{
+      var height=localStorage.getItem('height')
+      localStorage.setItem('height',height)
+    }
     function flatten(items, result = []) {
           if (items.length) {
             var item = items.shift();
@@ -94,7 +112,7 @@ $('document').ready(function(){
         var idToNodeMap = {};
         var root = null;
         var tree=make_tree(d,idToNodeMap,root);
-        draw_tree(null,tree);
+        draw_tree(null,tree,width,height);
     }else{
       console.log('stored');
       var idToNodeMap = {};
@@ -111,7 +129,7 @@ $('document').ready(function(){
       
       console.log('here')
       console.log(tree_in_store)
-      draw_tree(null,tree)
+      draw_tree(null,tree,width,height)
     };
 
     $('#upload').click(function() {
@@ -165,9 +183,49 @@ $('document').ready(function(){
       var filters2 = JSON.stringify(d);
       localStorage.setItem('tree_in_store', filters2);
       var tree=make_tree(d,idToNodeMap,root);
-      draw_tree(null,tree);
+      draw_tree(null,tree,width,height);
       //update(tree,'reload');
     });
+
+var width=localStorage.getItem('width')
+var height=localStorage.getItem('height')
+if(width=="undefined" || width=="null"|| width==null || width==undefined){
+  $('width').val(100)
+  localStorage.setItem('width',100)
+}else{
+  $('width').val(Number(width))
+}
+if(height=="undefined" || height=="null"|| height==null || height==undefined){
+  $('height').val(100)
+  localStorage.setItem('height',100)
+}else{
+  $('height').val(Number(height))
+}
+
+$('#resize').click(function(){
+  //setTimeout(function(){console.log('WAITNG');}, 300);
+  var tree=JSON.parse(localStorage.getItem('tree_in_store'));
+  var treenew=make_tree(tree,idToNodeMap,root);
+  var width=$('#width').val()
+  if(width){
+    console.log(width)
+    localStorage.setItem('width',width)
+  }else{
+    var width=localStorage.getItem('width')
+    localStorage.setItem('width',width)
+  }
+  console.log('width')
+  console.log(width)
+  var height=$('#height').val()
+   if(height){
+    console.log(height)
+    localStorage.setItem('height',height)
+  }else{
+    var height=localStorage.getItem('height')
+    localStorage.setItem('height',height)
+  }
+      draw_tree(null,treenew,width,height);
+})
 
 
 function encode( s ) {
