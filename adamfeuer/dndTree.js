@@ -323,6 +323,7 @@ function draw_tree(error,treeData) {
                      //localStorage.setItem('text_removable','removed');
                 }else{
                     d3.select('#texter').remove();
+                    d3.select('#picer').remove();
                 }
             
         })
@@ -529,7 +530,7 @@ function draw_tree(error,treeData) {
         x = x * scale + viewerWidth / 2;
         y = y * scale + viewerHeight / 2;
         console.log(x);
-        console.log(y)
+        console.log(y);
         d3.select('g').transition()
             .duration(duration)
             .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
@@ -568,10 +569,8 @@ function draw_tree(error,treeData) {
         console.log(adding);
         var levelWidth = [1];
         var childCount = function(level, n) {
-
             if (n.children && n.children.length > 0) {
                 if (levelWidth.length <= level + 1) levelWidth.push(0);
-
                 levelWidth[level + 1] += n.children.length;
                 n.children.forEach(function(d) {
                     childCount(level + 1, d);
@@ -579,8 +578,8 @@ function draw_tree(error,treeData) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line 
-        tree = tree.size([viewerHeight, viewerWidth]);
+        var newHeight = d3.max(levelWidth) * 40; // 25 pixels per line 
+        tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
         var nodes = tree.nodes(root).reverse(),
@@ -588,15 +587,9 @@ function draw_tree(error,treeData) {
 
         // Set widths between levels based on maxLabelLength.
         nodes.forEach(function(d) {
-            //d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
-            // alternatively to keep a fixed scale one can set a fixed depth per level
-            // Normalize for fixed-depth by commenting out below line
-            d.y = (d.depth * 300); //500px per level.
+            d.y = (d.depth * 200); //500px per level.
         });
-        console.log('nodes');
-        console.log(nodes);
-        console.log('adding')
-        console.log(adding);
+
         if(adding){
             console.log('heredsfds');
                 var latest_id=Number(localStorage.getItem('counter'));
@@ -678,8 +671,6 @@ function draw_tree(error,treeData) {
                     localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes_new));
                 }else{console.log('just display2')}
 
-        // var filters2 = JSON.stringify(nodes)
-        // localStorage.setItem('tree_in_store', filters2);
 
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
@@ -708,32 +699,28 @@ function draw_tree(error,treeData) {
             })
             .on('dblclick', click)
             .on('click', function(d){
-                console.log(d)
+                console.log(d);
                 centerNode(d);
                 console.log(d3.select(d3.event.target).classed('nodeCircle'));
                 // x=centerNode_text(d)[0];
                 // y=centerNode_text(d)[1];
                 console.log('ssss');
                 console.log(d3.event.pageX);
-                // var textBox = baseSvg.append("rect")
-                //     .attr("x", viewerWidth/2)
-                //     .attr("y", viewerHeight/2)
-                //     .attr("height", 100)
-                //     .attr("width", 140)
-                //     .style("stroke", "black")
-                //     .style("fill", "none")
-                //     .style("stroke-width", "2px");
-                // baseSvg.append("text")
-                //     .attr("x", (viewerWidth/2)+10)
-                //     .attr("y", (viewerHeight/2)+10)
-                //     .text(d.text)
-                // var removable=localStorage.getItem('text_removable');
                 if(d3.select(d3.event.target).classed('nodeCircle')){
+                    if(d.pic){
+                        $('#tree-container').append('<img id="picer" class="picer" src="file://localhost'+d.pic+'" alt="Image preview...">');
+                        $(".picer").css({"position": "absolute", "top": (viewerHeight/2)-181, "left": (viewerWidth/2), "width":"320px"});
+                    } 
                     $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>')
-                    $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px"});
+                    $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px", "height":"60px"});
+                    // $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>')
+                    // $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px"});
+                                       
                     //localStorage.setItem('text_removable','removed');
                 }else{
                     d3.select('#texter').remove();
+                    d3.select('#picer').remove();
+                    
                 }
 
                 //     d3.select("#texter").classed("hidden", false);
@@ -876,20 +863,11 @@ function draw_tree(error,treeData) {
     console.log(root);
     root.x0 = viewerHeight / 2;
     root.y0 = 0;
-//     d3.select("body").on("click",function(){
-//     var textareas=d3.select('#texter');
-//     if (textareas.length<1) {
-//         console.log('no need to remove')        
-//     }else{
-//         textareas.remove()
-//     }
-// });
+
     // Layout the tree initially and center on the root node.
     update(root,deleting=false,adding=false,renaming=false);
     centerNode(root);
     tree_root = root;
     console.log(tree_root);
-    // var filters2 = JSON.stringify(tree_root);
-    // localStorage.setItem('tree_in_store', filters2);
 }
 

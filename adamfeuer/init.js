@@ -170,5 +170,31 @@ $('document').ready(function(){
     });
 
 
+function encode( s ) {
+    var out = [];
+    for ( var i = 0; i < s.length; i++ ) {
+        out[i] = s.charCodeAt(i);
+    }
+    return new Uint8Array( out );
+}
+function download_json(){
+    var tree_in_store=JSON.parse(localStorage.getItem('tree_in_store'));
+    var v=make_tree(tree_in_store,idToNodeMap,root);
+    var data = encode(JSON.stringify(v, null, 4));
+    var blob = new Blob([data], {type: 'application/octet-stream'});
+    var url = URL.createObjectURL(blob);
+    console.log(tree_in_store[0].name.split(' ').join('_')+'.YnP.json');
+    chrome.downloads.download({
+      url: url, // The object URL can be used as download URL
+      filename: String(tree_in_store[0].name.split(' ').join('_')+'.YnP.json')
+  });
+  
+  
+}
+
+$('#download').click(function(){
+  download_json();
+});
+
 });
                 
