@@ -20,71 +20,83 @@ function generateUUID(){
 };
 
 function find_max(){
-  var tree=JSON.parse(localStorage.getItem('tree_in_store'));
-  list=[]
-  for(var i = 0; i < tree.length; i++){
+    var tree=JSON.parse(localStorage.getItem('tree_in_store'));
+    list=[]
+    for(var i = 0; i < tree.length; i++){
     if(tree[i]['_id']==='p1'){
         console.log('parent');
     }else{
         list.push(Number(tree[i]['_id']))
     }
-  }
-  if(list.length<1){
+    }
+    if(list.length<1){
     var latest=2;
-  }else{
+    }else{
     console.log(d3.max(list))
     var latest=d3.max(list)+1
-  }
-  localStorage.setItem('counter',latest);
-  return latest
+    }
+    localStorage.setItem('counter',latest);
+    return latest
 }
 
-function create_node() {
-        if (create_node_parent && create_node_modal_active) {
-                if (create_node_parent._children != null)  {
-                        create_node_parent.children = create_node_parent._children;
-                        create_node_parent._children = null;
-                }
-                if (create_node_parent.children == null) {
-                        create_node_parent.children = [];
-                }
-                //id = generateUUID(); 
-                var id=find_max();
-                name = $('#CreateNodeName').val();
-                new_node = { 'name': name, 
-                             'id' :  id,
-                             '_id':id,
-                             'depth': create_node_parent.depth + 1, 
-                             'children': [], 
-                             '_children':null 
-                           };
-                console.log('Create Node name: ' + name);
-                create_node_parent.children.push(new_node);
-                create_node_modal_active = false;
-                $('#CreateNodeName').val('');
 
+
+function create_node(){
+    console.log('hi');
+    if (create_node_parent && create_node_modal_active) {
+        if (create_node_parent._children != null)  {
+                create_node_parent.children = create_node_parent._children;
+                create_node_parent._children = null;
         }
-        close_modal();
-        console.log('get node parent')
-        console.log(create_node_parent)
-        outer_update(create_node_parent,adding=true);
+        if (create_node_parent.children == null) {
+                create_node_parent.children = [];
+        }
+        //id = generateUUID();
+        var id=find_max();
+        // var name=localStorage.getItem('name');
+        // console.log(name);
+        // var text=localStorage.getItem('text');
+        var name = $('#CreateNodeName').val();
+        var text = $('#CreateNodeText').val();
+        var linker = $('#CreateNodeLink').val();
+        new_node = { 'name': name,
+                     'text': text,
+                     'id' : id,
+                     '_id':id,
+                     'linker':linker,
+                     'depth': create_node_parent.depth + 1,
+                     'children': [],
+                     '_children':null
+                   };
+        console.log('Create Node name: ' + name);
+        create_node_parent.children.push(new_node);
+        create_node_modal_active = false;
+        $('#CreateNodeName').val('');
+    }
+    close_modal();
+    console.log('get node parent');
+    console.log(create_node_parent);
+    outer_update(create_node_parent,adding=true,deleting=false,renaming=false);
 }
 
 function rename_node() {
         if (node_to_rename && rename_node_modal_active) {
-                name = $('#RenameNodeName').val();
-                console.log('New Node name: ' + name);
-                node_to_rename.name = name;
-                rename_node_modal_active = false;
+            name = $('#RenameNodeName').val();
+            text = $('#RenameNodeText').val();
+            console.log('New Node name: ' + name);
+            node_to_rename.name = name;
+            node_to_rename.text = text;
+            rename_node_modal_active = false;
+            console.log(node_to_rename);
         }
         close_modal();
-        outer_update(node_to_rename,renaming=true);
+        outer_update(node_to_rename,adding=false,deleting=true,renaming=false);
 }
 
 outer_update = null;
 
-document.getElementById("renamer").addEventListener("click", rename_node);
-document.getElementById("creator").addEventListener("click", create_node);
+document.getElementById("renamer").addEventListener("click", function(){rename_node()});
+document.getElementById("creator").addEventListener("click", function(){create_node()});
 
 
 
@@ -109,6 +121,8 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     height_percent=Number(height_percent)/100;
     var viewerWidth = $(document).width()*width_percent;
     var viewerHeight = $(document).height()*height_percent;
+    document.body.style.width=viewerWidth+20 +'px'
+    document.body.style.height=viewerHeight+20 +'px'
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     console.log('tree');
@@ -123,10 +137,12 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
 
     var menu = [
             {
-                    title: 'Rename node',
+                    title: 'Edit Node',
                     action: function(elm, d, i) {
                             console.log('Rename node');
                             $("#RenameNodeName").val(d.name);
+                            $("#RenameNodeText").val(d.text);
+                            $("#RenameNodeLink").val(d.linker);
                             rename_node_modal_active = true;
                             node_to_rename = d
                             $("#RenameNodeName").focus();
@@ -149,6 +165,14 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                             $('#CreateNodeModal').foundation('reveal', 'open');
                             $('#CreateNodeName').focus();
                     }
+            },
+            {
+                    title: 'Go to link',
+                    action: function(elm, d, i){
+                        console.log(d);
+                        console.log(d.linker);
+                        chrome.tabs.create({ url: d.linker, active: true});
+                    }
             }
     ]
 
@@ -157,9 +181,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
 
     function visit(parent, visitFn, childrenFn) {
         if (!parent) return;
-
         visitFn(parent);
-
         var children = childrenFn(parent);
         if (children) {
             var count = children.length;
@@ -179,13 +201,13 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     });
 
     function delete_node(node) {
-        console.log('hehe')
+        console.log('hehe');
         visit(treeData, function(d) {
                if (d.children) {
                        for (var child of d.children) {
                                if (child == node) {
                                        d.children = _.without(d.children, child);
-                                       update(root,adding=false,deleting=true);
+                                       update(root,adding=false,deleting=true,renaming=false);
                                        break;
                                }
                        } 
@@ -282,7 +304,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
             }
             return false;
         }).remove();
-
         dragStarted = null;
     }
     // var dispatch = d3.dispatch('unhighlightAll')
@@ -307,7 +328,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
             // var removable=localStorage.getItem('removable')
             // if(d===undefined & removable==='removable'){
             //     console.log('got it');
-
             // }
 
             // var removable=localStorage.getItem('text_removable')
@@ -328,7 +348,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                        d3.select('#picer').remove();
                     }
                 }
-            
         })
         .attr("width", viewerWidth)
         .attr("height", viewerHeight);
@@ -367,7 +386,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 panTimer = true;
                 pan(this, 'left');
             } else if (relCoords[0] > ($('svg').width() - panBoundary)) {
-
                 panTimer = true;
                 pan(this, 'right');
             } else if (relCoords[1] < panBoundary) {
@@ -561,7 +579,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
         d = toggleChildren(d);
-        update(d,adding=false,deleting=false);
+        update(d,adding=false,deleting=false,renaming=false);
         centerNode(d);
     }
 
@@ -582,16 +600,16 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
             }
         };
         childCount(0, root);
-        var newHeight = d3.max(levelWidth) * 40; // 25 pixels per line 
+        var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line 
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
         var nodes = tree.nodes(root).reverse(),
             links = tree.links(nodes);
-
+        var link_depth=200*width_percent;
         // Set widths between levels based on maxLabelLength.
         nodes.forEach(function(d) {
-            d.y = (d.depth * 200); //500px per level.
+            d.y = (d.depth * link_depth); //500px per level.
         });
 
         if(adding){
@@ -606,43 +624,43 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                         var latest_node=nodes[j];
                     }
                 }
-                
+
                 newData=JSON.parse(localStorage.getItem('tree_in_store'));
-                    //newData=newData.pop();
-                    //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
-                    var pos=localStorage.getItem('branch_in_store')
-                    console.log('position')
-                    console.log(pos)
-                    if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
-                    console.log(latest_node);
-                    if(latest_node['parent']['_id']){
-                        parent_id=latest_node['parent']['_id']
-                    }else{
-                        parent_id=latest_node['parent']['id']
+                //newData=newData.pop();
+                //var pos=JSON.parse(localStorage.getItem('branch_in_store'))._id
+                var pos=localStorage.getItem('branch_in_store');
+                console.log('position');
+                console.log(pos);
+                if ($('#check_id').is(":checked")){var colour='red'}else{var colour='blue'}
+                console.log(latest_node);
+                if(latest_node['parent']['_id']){
+                    parent_id=latest_node['parent']['_id']
+                }else{
+                    parent_id=latest_node['parent']['id']
+                }
+                console.log('parent_id');
+                console.log(parent_id);
+                newData.push({"_id": latest_node['id'],
+                                "parentAreaRef": {'id':parent_id},
+                                "children":[],
+                                "text": null,
+                                "name": latest_node['name'],
+                                "status":"blue",
+                                "linker":null,
+                                "linkback":null,
+                                "number":null,
+                                "cat":null,
+                                'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
+                              })
+                for(var j = 0; j < newData.length; j++){
+                    if(newData[j]['id']){
+                      delete newData[j]['id']
                     }
-                    console.log('parent_id');
-                    console.log(parent_id);
-                    newData.push({"_id": latest_node['id'],
-                                        "parentAreaRef": {'id':parent_id},
-                                        "children":[],
-                                        "text": null,
-                                        "name": latest_node['name'],
-                                        "status":"blue",
-                                        "linker":null,
-                                        "linkback":null,
-                                        "number":null,
-                                        "cat":null,
-                                        'scores':{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0}
-                                      })
-                    for(var j = 0; j < newData.length; j++){
-                        if(newData[j]['id']){
-                          delete newData[j]['id']
-                        }
-                        if(newData[j]['parent']){
-                          delete newData[j]['parent']
-                        }
-                      }
-                    localStorage.setItem('tree_in_store',JSON.stringify(newData));
+                    if(newData[j]['parent']){
+                      delete newData[j]['parent']
+                    }
+                  }
+                localStorage.setItem('tree_in_store',JSON.stringify(newData));
                 }else{console.log('just display1')}
                 if(deleting || deleting==='yes'){
                     console.log('hhhdhfddddd');
@@ -674,6 +692,17 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                       }
                     localStorage.setItem('tree_in_store',JSON.stringify(ordered_nodes_new));
                 }else{console.log('just display2')}
+                if(renaming || renaming==='yes'){
+                    for(var j = 0; j < nodes.length; j++){
+                        console.log(nodes[j]);
+                        if(Number(nodes[j]['_id'])===latest_id){
+                            console.log('dddd');
+                            console.log(nodes[j]);
+                            var latest_node=nodes[j];
+                        }
+                    }
+                    newData=JSON.parse(localStorage.getItem('tree_in_store'));
+                }else{console.log('just display3')}
 
 
         // Update the nodes…
@@ -708,23 +737,22 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 console.log(d3.select(d3.event.target).classed('nodeCircle'));
                 // x=centerNode_text(d)[0];
                 // y=centerNode_text(d)[1];
+                var pic_distance=181*width_percent;
                 console.log('ssss');
                 console.log(d3.event.pageX);
                 if(d3.select(d3.event.target).classed('nodeCircle')){
                     if(d.pic){
                         $('#tree-container').append('<img id="picer" class="picer" src="file://localhost'+d.pic+'" alt="Image preview...">');
-                        $(".picer").css({"position": "absolute", "top": (viewerHeight/2)-181, "left": (viewerWidth/2), "width":"320px"});
-                    } 
-                    $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>')
+                        $(".picer").css({"position": "absolute", "top": (viewerHeight/2)-pic_distance, "left": (viewerWidth/2), "width":"320px"});
+                    }
+                    $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>');
                     $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px", "height":"60px"});
-                    // $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>')
+                    // $('#tree-container').append('<textarea type="text" id="texter" class="bpmnLabel" >'+d.text+'</textarea>');
                     // $(".bpmnLabel").css({"position": "absolute", "top": (viewerHeight/2), "left": (viewerWidth/2), "width":"320px"});
-                                       
                     //localStorage.setItem('text_removable','removed');
                 }else{
                     d3.select('#texter').remove();
                     d3.select('#picer').remove();
-                    
                 }
 
                 //     d3.select("#texter").classed("hidden", false);

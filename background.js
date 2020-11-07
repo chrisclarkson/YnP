@@ -56,7 +56,7 @@ var d = [{
         if(svgs.length>1){
           svgs[1].remove();
         }
-        };
+    };
 
 
 

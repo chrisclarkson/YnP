@@ -4,12 +4,52 @@ $('document').ready(function(){
     //style="width:780px; height:580px"
     // document.body.style.width = '300px';
     // document.body.style.height = '100px';
+    function gettext(){
+      var msg={
+        action:'gettext'
+      }
+      console.log('1fklsdjlkdfjl;');
+      chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+              console.log('2jfkldsajfl;jldasjl;dafs');
+          chrome.tabs.sendMessage(tabs[0].id, msg, function(response) {
+            console.log('3jkdfl;ajlf;dskaj;');
+          if(response){
+            console.log(response);
+              //console.log(response.response);//You have to choose which part of the response you want to display ie. response.response
+              if(response.response!=""){
+              var sentence = response.response;
+            }
+              var linkback = response.linkback;
+              var linker = response.linker;
+              var number=response.number;
+              var cat=response.cat;
+            }
+          if(sentence=="undefined" || sentence=="null"|| sentence==null || sentence==undefined){
+            console.log('no input');
+            var text=null;
+            var name=null;
+          }else{
+            var text=sentence;
+            var name=sentence.substr(0,9);
+          }
+          $('#CreateNodeName').val(name);
+          $('#CreateNodeText').val(text);
+          $('#CreateNodeLink').val(linker);
+          localStorage.setItem('name',name);
+          localStorage.setItem('text',text);
+          });
+        });
+      }
+
     $(document).on('opened', '[data-reveal]', function () {
         var element = $(".inputName:visible").first();
+        console.log('kdkjfdklffdk;l');
+        
         element.focus(function(){
             this.selectionStart = this.selectionEnd = this.value.length;
         });
         element.focus();
+        gettext();
     });
     $('#RenameNodeForm').submit(function(e){
             rename_node();
