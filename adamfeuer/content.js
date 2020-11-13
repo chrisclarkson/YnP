@@ -47,8 +47,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	if(message.action==='gettext'){
 	var sentence = window.getSelection().toString();
 	var linkback = getSelectionParentElement();
-	const [elem,cat]=findtag(linkback);
-	var number = findNumber(elem,sentence,cat);
+	//const [elem,cat]=findtag(linkback);
+	elem=null
+	cat=null
+	//var number = findNumber(elem,sentence,cat);
+	number=null
 	var linker = window.location.href;
 	console.log(sentence);
 	sendResponse({

@@ -227,6 +227,9 @@ $('document').ready(function(){
       //update(tree,'reload');
     });
 
+
+
+
 var width=localStorage.getItem('width')
 var height=localStorage.getItem('height')
 if(width=="undefined" || width=="null"|| width==null || width==undefined){
@@ -267,6 +270,60 @@ $('#resize').click(function(){
       draw_tree(null,treenew,width,height);
 })
 
+function list_to_tree(list) {
+    var map = {}, node, roots = [], i;
+    for (i = 0; i < list.length; i += 1) {
+        map[list[i]._id] = i; // initialize the map
+        list[i].children = []; // initialize the children
+    }
+    for (i = 0; i < list.length; i += 1) {
+        node = list[i];
+        console.log(node)
+        console.log(node.parentAreaRef)
+        if (node.parentAreaRef.id !== "0") {
+            node._id=Number(node._id)
+            node.parentAreaRef.id=Number(node.parentAreaRef.id)
+            console.log(list[map[node.parentAreaRef]])
+            list[map[node.parentAreaRef.id]].children.push(node);
+            console.log(roots)
+        } else {
+            roots.push(node);
+        }
+    }
+    return roots;
+}
+
+$('#upload_scraped').click(function() {
+  console.log('up')
+  function readTextFile(file){
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function (){
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0){
+                var allText = rawFile.responseText;
+                var tree=JSON.parse(allText);
+                console.log(tree)
+                //var treenew=flatten([tree]);
+                localStorage.setItem('tree_in_store', JSON.stringify(tree));
+                //change_counter();
+                //var treenew=list_to_tree(tree)
+                var treenew=make_tree(tree,idToNodeMap,root)
+                var width=localStorage.getItem('width');
+                var height=localStorage.getItem('height');
+                draw_tree(null,treenew,width,height);
+            }
+        }
+    }
+    rawFile.send(null);
+  }
+  console.log(readTextFile("file://"+$('#path').val()))
+//   d3.csv("file:///Users/Deirdreclarkson/js/ynp/links.csv", function(data) {
+//     console.log(data)
+//   dataset = data.map(function(d) { console.log(d); });
+// });
+})
 
 function encode( s ) {
     var out = [];
@@ -293,6 +350,10 @@ function download_json(){
 $('#download').click(function(){
   download_json();
 });
+
+
+
+
 
 });
                 

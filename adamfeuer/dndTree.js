@@ -18,6 +18,28 @@ function generateUUID(){
     });
     return uuid;
 };
+function make_tree(data,idToNodeMap,root){
+      console.log('making tree');
+      console.log(root);
+      console.log(idToNodeMap);
+      console.log(data);
+        for(var i = 0; i < data.length; i++) {
+            var datum = data[i];
+            console.log(i)
+            console.log(datum)
+            datum.children = [];
+            idToNodeMap[datum._id] = datum;
+            if(typeof datum.parentAreaRef === "undefined") {
+                root = datum;
+            } else {
+                parentNode = idToNodeMap[datum.parentAreaRef.id];
+                console.log(parentNode);
+                parentNode.children.push(datum);
+            }
+        }
+        console.log(root);
+        return root;
+    }
 
 function find_max(){
     var tree=JSON.parse(localStorage.getItem('tree_in_store'));
@@ -83,9 +105,11 @@ function rename_node() {
         if (node_to_rename && rename_node_modal_active) {
             name = $('#RenameNodeName').val();
             text = $('#RenameNodeText').val();
+            link = $('#RenameNodeLink').val();
             console.log('New Node name: ' + name);
             node_to_rename.name = name;
             node_to_rename.text = text;
+            node_to_rename.linker = link;
             rename_node_modal_active = false;
             console.log(node_to_rename);
         }
@@ -98,7 +122,258 @@ outer_update = null;
 document.getElementById("renamer").addEventListener("click", function(){rename_node()});
 document.getElementById("creator").addEventListener("click", function(){create_node()});
 
+function picture(d){
+    console.log('hdhhdhhdhhdhhdhhdhdhdhdhh')
+    function init(){
+        console.log('is this executing');
+        screenshot.initEvents();
+        console.log(' executing');
+    }
 
+    var screenshot = {
+        content : document.createElement("canvas"),
+        data : '',
+        saveScreenshot : function() {
+        var image = new Image();
+        image.onload = function() {
+            var canvas = screenshot.content;
+            canvas.width = image.width;
+            canvas.height = image.height;
+            var context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0);
+            // save the image
+            var link = document.createElement('a');
+            var pos=localStorage.getItem('branch_in_store');
+            var tree=JSON.parse(localStorage.getItem('tree_in_store'));
+            var name=tree[0].name
+            link.download = String(d._id)+"_"+d.name+"_"+".YnP.png";
+            link.href = screenshot.content.toDataURL();
+            link.click();
+            screenshot.data = '';
+        };
+        image.src = screenshot.data;
+        },
+        initEvents : function() {
+          console.log('now this should go');
+          console.log('does this stop here');
+            chrome.tabs.captureVisibleTab(null, {
+                format : "png",
+                quality : 100
+            }, function(data) {
+              console.log('what about this executing?');
+                screenshot.data = data;
+                // send an alert message to webpage
+                chrome.tabs.query({
+                    active : true,
+                    currentWindow : true
+                }, function(tabs) {
+                  console.log('ok but is this executing?');
+                    chrome.tabs.sendMessage(tabs[0].id, {ready : "ready"},
+                    function(response) {
+                        screenshot.saveScreenshot();
+                    });
+                });
+              });
+          }
+        };
+    init();
+    d.pic="/Users/Deirdreclarkson/js/json_files/"+String(d._id)+"_"+d.name+"_"+".YnP.png";
+    outer_update(d,adding=false,deleting=true,renaming=false);
+}
+
+
+
+
+function flatten(items, result = []) {
+  if (items.length) {
+    var item = items.shift();
+  if(item.parentAreaRef){
+    result.push({
+      _id: item._id,
+    name:item.name,
+    status:item.status,
+    text:item.text,
+    parentAreaRef:item.parentAreaRef,
+    linkback:item.linkback,
+    linker:item.linker,
+    pic:item.pic
+    });
+  }else{
+    result.push({
+      _id: item._id,
+    name:item.name,
+    text:item.text,
+    status:item.status,
+    linker:item.linker,
+    linkback:item.linkback,
+    pic:item.pic
+    }); 
+}
+    if (item.children && item.children.length) {
+      result = flatten(item.children, result);
+    }
+    return flatten(items, result);
+  } else {
+    return result;
+  }
+}
+
+
+  function readTextFile(file,d){
+    console.log('up');
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function (){
+        if(rawFile.readyState === 4){
+            if(rawFile.status === 200 || rawFile.status == 0){
+                var allText = rawFile.responseText;
+                var tree=JSON.parse(allText);
+                var treenew=flatten([tree]);
+                treeold=JSON.parse(localStorage.getItem('tree_in_store'));
+                list=[]
+                for(var i = 0; i < treeold.length; i++){
+                  list.push(Number(treeold[i]['_id']));
+                }
+                var branch_in_store=localStorage.getItem('branch_in_store');
+                var max_id=d3.max(list)+1;
+                for(var i = 0; i < treenew.length; i++){
+                  if(treenew[i]['_id']==="p1"){
+                    // console.log('point')
+                    // treenew[i]['_id']=max_id;
+                    // treenew[i]['parentAreaRef']={id:Number(branch_in_store)}
+                    console.log(treenew[i])
+                  }else{
+                    console.log('adding');
+                    console.log(Number(treenew[i]['_id']));
+                    console.log(Number(treenew[i]['_id'])+max_id);
+                    console.log(treenew[i]['parentAreaRef']['id']+max_id);
+                    treenew[i]['_id']=Number(treenew[i]['_id'])+max_id;
+                    if(treenew[i]['parentAreaRef']['id']==="p1"){
+                      console.log('parent children');
+                      treenew[i]['parentAreaRef']['id']="p1";
+                      console.log(treenew[i]);
+                    }else{
+                      treenew[i]['parentAreaRef']['id']=Number(treenew[i]['parentAreaRef']['id'])+max_id;
+                    }
+                  }
+                  treeold.push(treenew[i]);
+                }
+                var idToNodeMap = {};
+                var root = null;
+                //console.log(treeold)
+                //var tree=make_tree(treeold,idToNodeMap,root);
+                //treenew.unshift(d);
+                console.log(treenew);
+                var tree2=make_tree(treenew,idToNodeMap,root);
+                tree2['_id']=max_id;
+                tree2['parentAreaRef']={'id':d._id}
+                
+                for(var i = 0; i < tree2.children.length; i++){
+                  if(tree2.children[i]['parentAreaRef']==='p1'){
+                    tree2.children[i]['parentAreaRef']=max_id
+                  }
+                }
+                console.log(d)
+                if (d.children == null) {
+                    d.children = [];
+                }
+                d.children.push(tree2);
+                outer_update(d,adding=false,deleting='yes',renaming=false);
+                //update(tree,'reload');
+                //localStorage.setItem('tree_in_store', JSON.stringify(flatten([tree])));
+                //change_counter();
+            }
+        }
+    }
+    rawFile.send(null);
+  }
+  
+function encode( s ) {
+    var out = [];
+    for ( var i = 0; i < s.length; i++ ) {
+        out[i] = s.charCodeAt(i);
+    }
+    return new Uint8Array( out );
+}
+function download_json(branch){
+    delete branch['parent'];
+    delete branch['parentAreaRef'];
+    branch['_id']='p1';
+    for(var i = 0; i < branch.children.length; i++){
+        branch.children[i]['parentAreaRef']['id']='p1'
+    }
+    var idToNodeMap = {};
+    var root = null;
+    tree_in_store=flatten([branch]);
+    console.log('dfjdkajflk;djflkjfjjjjjjsssss')
+    console.log(tree_in_store);
+    var v=make_tree(tree_in_store,idToNodeMap,root);
+    var data = encode(JSON.stringify(v, null, 4));
+    var blob = new Blob([data], {type: 'application/octet-stream'});
+    var url = URL.createObjectURL(blob);
+    console.log(branch.name.split(' ').join('_')+'.YnP.json');
+    chrome.downloads.download({
+      url: url, // The object URL can be used as download URL
+      filename: String(branch.name.split(' ').join('_')+'.YnP.json')
+  });
+  
+  
+}
+
+
+//for more advanced implementation see: https://bl.ocks.org/jjzieve/a743242f46321491a950
+// function searchTree(obj,pattern){
+//     for(var i=0;i<obj.length;i++){
+//         console.log(obj[i])
+//         if(obj[i].name===pattern){
+//             var output=obj[i]
+//         }
+//     }
+//     return output
+// }
+
+
+function searchTree(obj,search,results){
+        
+        if(obj.name === search){ //if search is found return, add the object to the path and return it
+            results.push(obj);
+            console.log(obj)
+            return results;
+        }else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+            var children = (obj.children) ? obj.children : obj._children;
+            for(var i=0;i<children.length;i++){
+                // we assume this path is the right one
+                searchTree(children[i],search,results);
+                // else{//we were wrong, remove this parent from the path and continue iterating
+                //     path.pop();
+                // }
+            }
+        }
+        
+    }
+function searchTree(obj,search,path){
+        if(obj.name === search){ //if search is found return, add the object to the path and return it
+            console.log(obj)
+            path.push(obj);
+            return path;
+        }
+        else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+            var children = (obj.children) ? obj.children : obj._children;
+            for(var i=0;i<children.length;i++){
+                path.push(obj);// we assume this path is the right one
+                var found = searchTree(children[i],search,path);
+                if(found){// we were right, this should return the bubbled-up path from the first if statement
+                    return found;
+                }
+                else{//we were wrong, remove this parent from the path and continue iterating
+                    path.pop();
+                }
+            }
+        }
+        else{//not the right object, return false so it will continue to iterate in the loop
+            return false;
+        }
+    }
 
 function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     localStorage.setItem('text_removable','not_removable');
@@ -121,8 +396,8 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     height_percent=Number(height_percent)/100;
     var viewerWidth = $(document).width()*width_percent;
     var viewerHeight = $(document).height()*height_percent;
-    document.body.style.width=viewerWidth+20 +'px'
-    document.body.style.height=viewerHeight+20 +'px'
+    document.body.style.width=viewerWidth+20 +'px';
+    document.body.style.height=viewerHeight+2 +'px';
     var tree = d3.layout.tree()
         .size([viewerHeight, viewerWidth]);
     console.log('tree');
@@ -173,11 +448,33 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                         console.log(d.linker);
                         chrome.tabs.create({ url: d.linker, active: true});
                     }
+            },
+            {
+                title: 'attach screenshot',
+                    action: function(elm, d, i){
+                        console.log(d);
+                        console.log(d.linker);
+                        picture(d);
+                    }
+            },
+            {
+                title: 'upload branch',
+                action: function(elm, d, i){
+                    console.log(readTextFile("file://"+$('#path').val(),d));
+                    
+                }
+            },
+            {
+                title: 'download branch',
+                action: function(elm, d, i){
+                    download_json(d);
+                }
             }
     ]
 
 
     // A recursive helper function for performing some setup by walking through all nodes
+
 
     function visit(parent, visitFn, childrenFn) {
         if (!parent) return;
@@ -227,7 +524,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
         });
     }
     // Sort the tree initially incase the JSON isn't in a sorted order.
-    sortTree();
+    //sortTree();
 
     // TODO: Pan function, can be better implemented.
 
@@ -261,6 +558,8 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     function zoom() {
         svgGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     }
+
+
 
 
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
@@ -430,7 +729,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 }
                 // Make sure that the node being added to is expanded so user can see added node is correctly moved
                 expand(selectedNode);
-                sortTree();
+                //sortTree();
                 endDrag();
             } else {
                 endDrag();
@@ -544,6 +843,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     }
 
     function centerNode_text(source) {
+        console.log(source)
         scale = zoomListener.scale();
         x = -source.y0;
         y = -source.x0;
@@ -553,9 +853,9 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
         y = y * scale + viewerHeight / 2;
         console.log(x);
         console.log(y);
-        d3.select('g').transition()
-            .duration(duration)
-            .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
+        // d3.transition()
+        //     .duration(duration)
+        //     .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")");
         zoomListener.scale(scale);
         zoomListener.translate([x, y]);
         return [x, y]
@@ -738,6 +1038,9 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 // x=centerNode_text(d)[0];
                 // y=centerNode_text(d)[1];
                 var pic_distance=181*width_percent;
+                var text_distance_w=100*width_percent;
+                var text_distance_h=10*height_percent;
+
                 console.log('ssss');
                 console.log(d3.event.pageX);
                 if(d3.select(d3.event.target).classed('nodeCircle')){
@@ -910,5 +1213,24 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     centerNode(root);
     tree_root = root;
     console.log(tree_root);
+    $("#search").on("click", function() {
+    console.log('dkd')
+    var paths = searchTree(root,$('#path').val(),[]);
+        // if(typeof(paths) !== "undefined"){
+        //     openPaths(paths);
+        // }
+        // else{
+        //     alert(e.object.text+" not found!");
+        // }
+    //var node = searchTree(tree_root,$('#path').val(),[]);
+    console.log('found node');
+    console.log(paths);
+    var node=paths[paths.length-1];
+    centerNode(node);
+})
 }
+
+
+
+
 

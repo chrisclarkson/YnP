@@ -10,15 +10,15 @@ var width=localStorage.getItem('width')
 var height=localStorage.getItem('height')
 if(width=="undefined" || width=="null"|| width==null || width==undefined){
   $('width').val(1060)
-  localStorage.setItem('width',1060)
+  localStorage.setItem('width',1060);
 }else{
-  $('width').val(Number(width))
+  $('width').val(Number(width));
 }
 if(height=="undefined" || height=="null"|| height==null || height==undefined){
   $('height').val(500)
-  localStorage.setItem('height',500)
+  localStorage.setItem('height',500);
 }else{
-  $('height').val(Number(height))
+  $('height').val(Number(height));
 }
 
 if(tree_in_store=="undefined" || tree_in_store=="null"|| tree_in_store==null || tree_in_store==undefined){
@@ -35,13 +35,13 @@ var d = [{
         }];
         var filters2 = JSON.stringify(d)
         localStorage.setItem('tree_in_store', filters2);
-        var tree=make_tree(d,idToNodeMap,root)
-        var width=localStorage.getItem('width')
-        var height=localStorage.getItem('height')
-        update(tree,'just_loaded',width,height)
-        var svgs=document.getElementsByTagName('svg')
+        var tree=make_tree(d,idToNodeMap,root);
+        var width=localStorage.getItem('width');
+        var height=localStorage.getItem('height');
+        update(tree,'just_loaded',width,height);
+        var svgs=document.getElementsByTagName('svg');
         if(svgs.length>1){
-          svgs[1].remove()
+          svgs[1].remove();
         }
         }else{
           console.log('stored');
@@ -75,12 +75,12 @@ function get_rid_of_duplicate_text_areas(){
         }
       }
     }
-    console.log('dfkla;jfl;ads')
-    console.log(l)
-    var textareas=document.getElementsByClassName('tooltip')
-    var l=textareas.length
+    console.log('dfkla;jfl;ads');
+    console.log(l);
+    var textareas=document.getElementsByClassName('tooltip');
+    var l=textareas.length;
     console.log('length');
-    console.log(l)
+    console.log(l);
     if(textareas){
       if(l>1){
         var to = l-1;
@@ -691,7 +691,7 @@ $('#upload_branch').click(function() {
   }
   }
   var done_yet=localStorage.getItem('done_yet');
-  console.log(readTextFile("file://"+$('#path').val(),done_yet));
+  console.log(readTextFile("file://"+$('#path').val()));
 })
 
 function list_to_tree(list) {
