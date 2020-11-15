@@ -333,47 +333,130 @@ function download_json(branch){
 // }
 
 
-function searchTree(obj,search,results){
+// function searchTree(obj,search,results){
         
-        if(obj.name === search){ //if search is found return, add the object to the path and return it
-            results.push(obj);
-            console.log(obj)
-            return results;
-        }else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+//         if(obj.name === search){ //if search is found return, add the object to the path and return it
+//             results.push(obj);
+//             console.log(obj)
+//             return results;
+//         }else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+//             var children = (obj.children) ? obj.children : obj._children;
+//             for(var i=0;i<children.length;i++){
+//                 // we assume this path is the right one
+//                 searchTree(children[i],search,results);
+//                 // else{//we were wrong, remove this parent from the path and continue iterating
+//                 //     path.pop();
+//                 // }
+//             }
+//         }
+        
+//     }
+// function searchTree(obj,search,path){
+//         if(obj.name.toLowerCase().includes(search.toLowerCase())){ //if search is found return, add the object to the path and return it
+//             console.log(obj);
+//             path.push(obj);
+//             return path;
+//         }else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
+//             var children = (obj.children) ? obj.children : obj._children;
+//             for(var i=0;i<children.length;i++){
+//                 path.push(obj);// we assume this path is the right one
+//                 var found = searchTree(children[i],search,path);
+//                 if(found){// we were right, this should return the bubbled-up path from the first if statement
+//                     return found;
+//                 }
+//                 else{//we were wrong, remove this parent from the path and continue iterating
+//                     path.pop();
+//                 }
+//             }
+//         }
+//         else{//not the right object, return false so it will continue to iterate in the loop
+//             return false;
+//         }
+//     }
+
+JaroWrinker  = function (s1, s2) {
+        var m = 0;
+        // Exit early if either are empty.
+        if ( s1.length === 0 || s2.length === 0 ) {
+            return 0;
+        }
+        // Exit early if they're an exact match.
+        if ( s1 === s2 ) {
+            return 1;
+        }
+        var range     = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1,
+            s1Matches = new Array(s1.length),
+            s2Matches = new Array(s2.length);
+        for ( i = 0; i < s1.length; i++ ) {
+            var low  = (i >= range) ? i - range : 0,
+                high = (i + range <= s2.length) ? (i + range) : (s2.length - 1);
+            for ( j = low; j <= high; j++ ) {
+            if ( s1Matches[i] !== true && s2Matches[j] !== true && s1[i] === s2[j] ) {
+                ++m;
+                s1Matches[i] = s2Matches[j] = true;
+                break;
+            }
+            }
+        }
+
+        // Exit early if no matches were found.
+        if ( m === 0 ) {
+            return 0;
+        }
+
+        // Count the transpositions.
+        var k = n_trans = 0;
+
+        for ( i = 0; i < s1.length; i++ ) {
+            if ( s1Matches[i] === true ) {
+            for ( j = k; j < s2.length; j++ ) {
+                if ( s2Matches[j] === true ) {
+                k = j + 1;
+                break;
+                }
+            }
+
+            if ( s1[i] !== s2[j] ) {
+                ++n_trans;
+            }
+            }
+        }
+
+        var weight = (m / s1.length + m / s2.length + (m - (n_trans / 2)) / m) / 3,
+            l      = 0,
+            p      = 0.1;
+
+        if ( weight > 0.7 ) {
+            while ( s1[l] === s2[l] && l < 4 ) {
+            ++l;
+            }
+
+            weight = weight + l * p * (1 - weight);
+        }
+
+        return weight;
+    }
+function searchTree(obj,search,finds){
+    var similarity=JaroWrinker(search,obj.name)
+        if(similarity>0.6){ //if search is found return, add the object to the path and return it
+            console.log(obj);
+            obj.similarity=similarity
+            delete obj.parent
+            delete obj.parentAreaRef
+            delete obj.children
+            finds.push(obj);
+        }
+        if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
             var children = (obj.children) ? obj.children : obj._children;
             for(var i=0;i<children.length;i++){
                 // we assume this path is the right one
-                searchTree(children[i],search,results);
-                // else{//we were wrong, remove this parent from the path and continue iterating
-                //     path.pop();
-                // }
-            }
-        }
-        
-    }
-function searchTree(obj,search,path){
-        if(obj.name === search){ //if search is found return, add the object to the path and return it
-            console.log(obj)
-            path.push(obj);
-            return path;
-        }
-        else if(obj.children || obj._children){ //if children are collapsed d3 object will have them instantiated as _children
-            var children = (obj.children) ? obj.children : obj._children;
-            for(var i=0;i<children.length;i++){
-                path.push(obj);// we assume this path is the right one
-                var found = searchTree(children[i],search,path);
-                if(found){// we were right, this should return the bubbled-up path from the first if statement
-                    return found;
-                }
-                else{//we were wrong, remove this parent from the path and continue iterating
-                    path.pop();
-                }
-            }
-        }
-        else{//not the right object, return false so it will continue to iterate in the loop
-            return false;
+                var found = searchTree(children[i],search,finds);
+                
         }
     }
+    return finds
+}
+
 
 function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     localStorage.setItem('text_removable','not_removable');
@@ -1214,20 +1297,53 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     tree_root = root;
     console.log(tree_root);
     $("#search").on("click", function() {
-    console.log('dkd')
-    var paths = searchTree(root,$('#path').val(),[]);
-        // if(typeof(paths) !== "undefined"){
-        //     openPaths(paths);
-        // }
-        // else{
-        //     alert(e.object.text+" not found!");
-        // }
-    //var node = searchTree(tree_root,$('#path').val(),[]);
-    console.log('found node');
-    console.log(paths);
-    var node=paths[paths.length-1];
-    centerNode(node);
-})
+        console.log('dkd')
+        var finds = searchTree(root,$('#path').val(),[]);
+            // if(typeof(paths) !== "undefined"){
+            //     openPaths(paths);
+            // }
+            // else{
+            //     alert(e.object.text+" not found!");
+            // }
+        //var node = searchTree(tree_root,$('#path').val(),[]);
+        console.log('found node');
+        function dynamicSort(property) {
+            var sortOrder = 1;
+            if(property[0] === "-") {
+                sortOrder = -1;
+                property = property.substr(1);
+            }
+            return function (a,b) {
+                /* next line works with strings and numbers, 
+                 * and you may want to customize it to your needs
+                 */
+                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                return result * sortOrder;
+            }
+        }
+        finds.sort(dynamicSort('similarity')).reverse();
+        console.log(finds);
+        localStorage.setItem('search_results',JSON.stringify(finds));
+        localStorage.setItem('search_results_idx','0')
+        var node=finds[0];
+        centerNode(node);
+    })
+    $('#next').on('click',function(){
+        var finds=JSON.parse(localStorage.getItem('search_results'));
+        var idx=Number(localStorage.getItem('search_results_idx'))+1;
+        if(idx>=finds.length){idx=idx-1}
+        localStorage.setItem('search_results_idx',String(idx));
+        var node=finds[idx];
+        centerNode(node);
+    })
+    $('#previous').on('click',function(){
+        var finds=JSON.parse(localStorage.getItem('search_results'));
+        var idx=Number(localStorage.getItem('search_results_idx'))-1;
+        if(idx<=0){idx=0}
+        localStorage.setItem('search_results_idx',String(idx));
+        var node=finds[idx];
+        centerNode(node);
+    })
 }
 
 
