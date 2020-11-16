@@ -13,6 +13,8 @@ print(file)
 with open(file,'r', encoding='utf-8',errors='ignore') as json_file:
 	data = json.loads(json_file.read())
 
+print(data)
+
 document = Document()
 
 document.add_heading(data['name'], 0)
@@ -28,6 +30,7 @@ def recursive_iter(obj,counter=0):
 	if len(obj['children'])<1:
 		print('end')
 		add_header(obj['name'], counter)
+
 		text=re.sub(r'\n','',obj['text'])
 		document.add_paragraph(text)
 		if 'linker' in obj:
@@ -39,15 +42,27 @@ def recursive_iter(obj,counter=0):
 			print(i['name'])
 			if len(i['children'])<1:
 				add_header(i['name'], counter+1)
-				text=re.sub(r'\n','',i['text'])
-				document.add_paragraph(text)
+				# text=i['text']
+				# print(text)
+				if 'text' in i:
+					text=i['text']
+					print(text)
+					if text!=None:
+						text=i['text'].replace('\n','')
+					document.add_paragraph(text)
 				if 'linker' in i:
 					document.add_paragraph(i['linker'])
 				continue
 			else:
 				add_header(i['name'], counter)
-				text=re.sub(r'\n','',i['text'])
-				document.add_paragraph(text)
+				# text=i['text']
+				# print(text)
+				if 'text' in i:
+					text=i['text']
+					print(text)
+					if text!=None:
+						text=i['text'].replace('\n','')
+					document.add_paragraph(text)
 				if 'linker' in i:
 					document.add_paragraph(i['linker'])
 				recursive_iter(i,counter)

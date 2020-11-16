@@ -3,10 +3,10 @@ import sys
 import re
 from docx import Document
 from docx.shared import Inches
-# file=sys.argv[1]
-# output=sys.argv[2]
+file=sys.argv[1]
+output=sys.argv[2]
 
-document = Document("AD_objectives.docx")
+document = Document(input)
 body_elements = document._body._body
 #extract those wrapped in <w:r> tag
 rs = body_elements.xpath('.//w:r')
