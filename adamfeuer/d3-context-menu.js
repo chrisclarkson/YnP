@@ -7,9 +7,9 @@ d3.contextMenu = function (menu, openCallback) {
 		.attr('class', 'd3-context-menu');
 
 	// close menu
-	d3.select('body').on('click.d3-context-menu', function() {
-		d3.select('.d3-context-menu').style('display', 'none');
-	});
+	// d3.select('body').on('click.d3-context-menu', function() {
+	// 	d3.select('.d3-context-menu').style('display', 'none');
+	// });
 
 	// this gets executed when a contextmenu event occurs
 	return function(data, index) {

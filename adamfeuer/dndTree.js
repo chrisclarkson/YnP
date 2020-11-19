@@ -1,4 +1,6 @@
 
+/// adam feueur 2: https://bl.ocks.org/adamfeuer/a8950c5197fe491f13969a03100159d5
+
 function close_modal() {
         $(document).foundation('reveal', 'close');
 }
@@ -81,11 +83,13 @@ function create_node(){
         var name = $('#CreateNodeName').val();
         var text = $('#CreateNodeText').val();
         var linker = $('#CreateNodeLink').val();
+        var pic = $('#CreateNodePic').val();
         new_node = { 'name': name,
                      'text': text,
                      'id' : id,
                      '_id':id,
                      'linker':linker,
+                     'pic':pic,
                      'depth': create_node_parent.depth + 1,
                      'children': [],
                      '_children':null
@@ -106,10 +110,12 @@ function rename_node() {
             name = $('#RenameNodeName').val();
             text = $('#RenameNodeText').val();
             link = $('#RenameNodeLink').val();
+            pic = $('#CreateNodePic').val();
             console.log('New Node name: ' + name);
             node_to_rename.name = name;
             node_to_rename.text = text;
             node_to_rename.linker = link;
+            node_to_rename.pic = pic;
             rename_node_modal_active = false;
             console.log(node_to_rename);
         }
@@ -495,7 +501,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
 
     var menu = [
             {
-                    title: 'Edit Node',
+                    title: 'Edit node',
                     action: function(elm, d, i) {
                             console.log('Rename node');
                             $("#RenameNodeName").val(d.name);
@@ -533,7 +539,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                     }
             },
             {
-                title: 'attach screenshot',
+                title: 'Attach screenshot',
                     action: function(elm, d, i){
                         console.log(d);
                         console.log(d.linker);
@@ -541,7 +547,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                     }
             },
             {
-                title: 'upload branch',
+                title: 'Upload branch',
                 action: function(elm, d, i){
                     console.log(readTextFile("file://"+$('#path').val(),d));
                     
@@ -745,6 +751,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     // Define the drag listeners for drag/drop behaviour of nodes.
     dragListener = d3.behavior.drag()
         .on("dragstart", function(d) {
+            //setTimeout(function(){console.log('WAITNG');}, 1000); // to wait a second https://stackoverflow.com/questions/42334432/long-click-event-in-d3
             if (d == root) {
                 return;
             }
@@ -1119,11 +1126,10 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 centerNode(d);
                 console.log(d3.select(d3.event.target).classed('nodeCircle'));
                 // x=centerNode_text(d)[0];
-                // y=centerNode_text(d)[1];
+                // y=centerNode_text(d)[1]; 
                 var pic_distance=181*width_percent;
                 var text_distance_w=100*width_percent;
                 var text_distance_h=10*height_percent;
-
                 console.log('ssss');
                 console.log(d3.event.pageX);
                 if(d3.select(d3.event.target).classed('nodeCircle')){
