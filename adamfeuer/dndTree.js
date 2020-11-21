@@ -20,6 +20,7 @@ function generateUUID(){
     });
     return uuid;
 };
+
 function make_tree(data,idToNodeMap,root){
       console.log('making tree');
       console.log(root);
@@ -27,8 +28,8 @@ function make_tree(data,idToNodeMap,root){
       console.log(data);
         for(var i = 0; i < data.length; i++) {
             var datum = data[i];
-            console.log(i)
-            console.log(datum)
+            console.log(i);
+            console.log(datum);
             datum.children = [];
             idToNodeMap[datum._id] = datum;
             if(typeof datum.parentAreaRef === "undefined") {
@@ -62,7 +63,6 @@ function find_max(){
     localStorage.setItem('counter',latest);
     return latest
 }
-
 
 
 function create_node(){
@@ -649,8 +649,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     }
 
 
-
-
     // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
     var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 1]).on("zoom", zoom);
 
@@ -683,7 +681,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                     return true;
                 }).remove();
         }
-
         // remove parent link
         parentLink = tree.links(tree.nodes(draggingNode.parent));
         svgGroup.selectAll('path.link').filter(function(d, i) {
@@ -751,6 +748,10 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     // Define the drag listeners for drag/drop behaviour of nodes.
     dragListener = d3.behavior.drag()
         .on("dragstart", function(d) {
+            startTime = new Date(); 
+            console.log('startdrag')
+            console.log(startTime)
+            localStorage.setItem('startTime',startTime.toString())
             //setTimeout(function(){console.log('WAITNG');}, 1000); // to wait a second https://stackoverflow.com/questions/42334432/long-click-event-in-d3
             if (d == root) {
                 return;
@@ -797,6 +798,17 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
             node.attr("transform", "translate(" + d.y0 + "," + d.x0 + ")scale(" + scale + ")");
             updateTempConnector();
         }).on("dragend", function(d) {
+            startTime=new Date(localStorage.getItem('startTime'));
+            endTime = new Date(); 
+            console.log('checking')
+            console.log(typeof(startTime))
+            console.log(startTime)
+            console.log(endTime-startTime)
+            if(endTime-startTime<2000){
+                console.log('this should stop here');
+                console.log(endTime-startTime);
+                return;
+            }
             if (d == root) {
                 return;
             }
@@ -834,7 +846,6 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', '');
         updateTempConnector();
         if (draggingNode !== null) {
-            console.log('fjjfjfjfjjfjfjfj');
             update(root,adding=false,deleting='no',renaming=false);
             centerNode(draggingNode);
             draggingNode = null;
@@ -1303,7 +1314,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
     tree_root = root;
     console.log(tree_root);
     $("#search").on("click", function() {
-        console.log('dkd')
+        // console.log('dkd')
         var finds = searchTree(root,$('#path').val(),[]);
             // if(typeof(paths) !== "undefined"){
             //     openPaths(paths);
@@ -1312,7 +1323,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
             //     alert(e.object.text+" not found!");
             // }
         //var node = searchTree(tree_root,$('#path').val(),[]);
-        console.log('found node');
+        //console.log('found node');
         function dynamicSort(property) {
             var sortOrder = 1;
             if(property[0] === "-") {
@@ -1327,6 +1338,7 @@ function draw_tree(error,treeData,width_percent=100,height_percent=100) {
                 return result * sortOrder;
             }
         }
+
         finds.sort(dynamicSort('similarity')).reverse();
         console.log(finds);
         localStorage.setItem('search_results',JSON.stringify(finds));

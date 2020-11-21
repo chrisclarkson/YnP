@@ -6,7 +6,7 @@ from docx.shared import Inches
 file=sys.argv[1]
 output=sys.argv[2]
 
-document = Document(input)
+document = Document(file)
 body_elements = document._body._body
 #extract those wrapped in <w:r> tag
 rs = body_elements.xpath('.//w:r')
@@ -15,7 +15,11 @@ table_of_content = [r.text for r in rs if r.style == "Hyperlink"]
 
 paragraphs=document.paragraphs
 header_styles=[]
-header_styles.append(['Heading 0','AD Project objectives',0])
+for i in range(0,len(paragraphs)):
+	if document.paragraphs[i].style.name=='Title':
+		header_styles.append(['Heading 0',document.paragraphs[i].text,0])
+		original_heading=document.paragraphs[i].text
+
 counter=1
 for i in range(1,len(paragraphs)):
 	if 'Heading' in document.paragraphs[i].style.name:
@@ -86,7 +90,7 @@ for i in range(last,0,-1):
 	pairs.append(find_pairs(i,header_styles,levels))
 
 pairs=pairs[::-1]
-pairs.insert(0,(0,'NA',1,'AD_objectives',''))
+pairs.insert(0,(0,'NA',1,original_heading,''))
 queue_tuples=pairs
 pGraph = {"_id":0,"name":queue_tuples[0][3],"children":[]}
 
@@ -123,14 +127,12 @@ for tuple in queue_tuples:
 				'text':tuple[4],
 				"children":[]})
 
-print(pGraph)
+
 final=pGraph['children'][0]
+for i in range(1,len(pGraph['children'])-1):
+	final['children'].append(pGraph['children'][i])
 
-with open('data.json', 'w') as f:
-	json.dump(pGraph['children'],f,indent=4)
-
-
-
-
+with open(output, 'w') as f:
+	json.dump(final,f,indent=4)
 
 
