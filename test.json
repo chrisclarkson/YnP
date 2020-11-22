@@ -1,38 +1,375 @@
-{"_id":"33162933","text":"Genomic Medicine: Lessons Learned From Monogenic and Complex Bone Disorders.","name":"Rivadeneira F 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33162933","children":[]}, 
-{"_id":"33106501","text":"Preclinical validation of therapeutic targets predicted by tensor factorization on heterogeneous graphs.","name":"Lacoste AM 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33106501","children":[]}, 
-{"_id":"33062455","text":"Expression of collagen type 1 alpha 1 indicates lymph node metastasis and poor outcomes in squamous cell carcinomas of the lung.","name":"Zhang S 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33062455","children":[]}, 
-{"_id":"33055159","text":"The support of genetic evidence for cardiovascular risk induced by antineoplastic drugs.","name":"Li MJ 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33055159","children":[]}, 
-{"_id":"33005893","text":"Summary-data-based Mendelian randomization prioritizes potential druggable targets for multiple sclerosis.","name":"Dobson R 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33005893","children":[]}, 
-{"_id":"32879140","text":"Multiomics dissection of molecular regulatory mechanisms underlying autoimmune-associated noncoding SNPs.","name":"Yang TL 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32879140","children":[]}, 
-{"_id":"32778885","text":"Using functional genomics to advance the understanding of psoriatic arthritis.","name":"Orozco G 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32778885","children":[]}, 
-{"_id":"32670504","text":"Turning genome-wide association study findings into opportunities for drug repositioning.","name":"So HC 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32670504","children":[]}, 
-{"_id":"32648582","text":"Rethinking animal models of sepsis - working towards improved clinical translation whilst integrating the 3Rs.","name":"Lilley E 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32648582","children":[]}, 
-{"_id":"32637948","text":"Genetic architecture of host proteins interacting with SARS-CoV-2.","name":"Langenberg C 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32637948","children":[]}, 
-{"_id":"32628676","text":"Linking protein to phenotype with Mendelian Randomization detects 38 proteins with causal roles in human diseases and traits.","name":"Haley C 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32628676","children":[]}, 
-{"_id":"32591531","text":"Genetic drug target validation using Mendelian randomisation.","name":"Hingorani AD 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32591531","children":[]}, 
-{"_id":"32525143","text":"Targeting and extending the eukaryotic druggable genome with natural products.","name":"MacMillan JB 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32525143","children":[]}, 
-{"_id":"32509554","text":"RNA Therapy: Current Status and Future Potential.","name":"Kim YK 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32509554","children":[]}, 
-{"_id":"32484822","text":"TRPM4 is overexpressed in breast cancer associated with estrogen response and epithelial-mesenchymal transition gene sets.","name":"Hussain FA 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32484822","children":[]}, 
-{"_id":"32403949","text":"Transcriptional and Cellular Diversity of the Human Heart.","name":"Ellinor PT 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32403949","children":[]}, 
-{"_id":"32347548","text":"The Microbiome and the Gut-Liver-Brain Axis for Central<U+00A0>Nervous<U+00A0>System Clinical Pharmacology: Challenges in Specifying and Integrating In Vitro and In Silico Models.","name":"Wikswo JP 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32347548","children":[]}, 
-{"_id":"32171238","text":"Machine learning prediction of oncology drug targets based on protein and network properties.","name":"Ceccarelli M 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32171238","children":[]}, 
-{"_id":"32166339","text":"PLCG2 protective variant p.P522R modulates tau pathology and disease progression in patients with mild cognitive impairment.","name":"Ramirez A 2020","parentAreaRef":{"id":"28356508"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32166339","children":[]}, 
-{"_id":"33162933","text":"Genomic Medicine: Lessons Learned From Monogenic and Complex Bone Disorders.","name":"Rivadeneira F 2020","parentAreaRef":{"id":"32591531"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33162933","children":[]}, 
-{"_id":"32893005","text":"Paving the Road for RNA Therapeutics.","name":"Peer D 2020","parentAreaRef":{"id":"32509554"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32893005","children":[]}, 
-{"_id":"32716721","text":"Genetics of Atrial Fibrillation in 2020: GWAS, Genome Sequencing, Polygenic Risk, and Beyond.","name":"Ellinor PT 2020","parentAreaRef":{"id":"32403949"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32716721","children":[]}, 
-{"_id":"32630148","text":"Vascular Homeostasis and Inflammation in Health and Disease-Lessons from Single Cell Technologies.","name":"Sheikh BN 2020","parentAreaRef":{"id":"32403949"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32630148","children":[]}, 
-{"_id":"32620943","text":"Pharmacogenomics for immunotherapy and immune-related cardiotoxicity.","name":"Cheng F 2020","parentAreaRef":{"id":"32403949"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32620943","children":[]}, 
-{"_id":"32762503","text":"Introduction to the Compendium on Atrial Fibrillation, and a Few Thoughts Along The Way<U+2026>.","name":"Ellinor PT 2020","parentAreaRef":{"id":"32716721"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32762503","children":[]}, 
-{"_id":"33142805","text":"Delicate Role of PD-L1/PD-1 Axis in Blood Vessel Inflammatory Diseases: Current Insight and Future Significance.","name":"Wippermann J 2020","parentAreaRef":{"id":"32630148"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33142805","children":[]}, 
-{"_id":"33092647","text":"Association of ABI3 and PLCG2 missense variants with disease risk and neuropathology in Lewy body disease and progressive supranuclear palsy.","name":"Ertekin-Taner N 2020","parentAreaRef":{"id":"32166339"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33092647","children":[]}, 
-{"_id":"31131421","text":"A nonsynonymous mutation in PLCG2 reduces the risk of Alzheimer's disease, dementia with Lewy bodies and frontotemporal dementia, and increases the likelihood of longevity.","name":"Holstege H 2019","parentAreaRef":{"id":"32166339"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=31131421","children":[]}, 
-{"_id":"33092647","text":"Association of ABI3 and PLCG2 missense variants with disease risk and neuropathology in Lewy body disease and progressive supranuclear palsy.","name":"Ertekin-Taner N 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33092647","children":[]}, 
-{"_id":"32994401","text":"Immune response and endocytosis pathways are associated with the resilience against Alzheimer's disease.","name":"Holstege H 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32994401","children":[]}, 
-{"_id":"32917267","text":"The Alzheimer's disease-associated protective Plc<U+03B3>2-P522R variant promotes immune functions.","name":"Haass C 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32917267","children":[]}, 
-{"_id":"32787975","text":"Genome-wide profiling of DNA methylation and gene expression identifies candidate genes for human diabetic neuropathy.","name":"Hur J 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32787975","children":[]}, 
-{"_id":"32522286","text":"Rh-CSF1 attenuates neuroinflammation via the CSF1R/PLCG2/PKC<U+03B5> pathway in a rat model of neonatal HIE.","name":"Zhang JH 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32522286","children":[]}, 
-{"_id":"32184360","text":"Noncatalytic Bruton's tyrosine kinase activates PLC<U+03B3><sub>2</sub> variants mediating ibrutinib resistance in human chronic lymphocytic leukemia cells.","name":"Walliser C 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32184360","children":[]}, 
-{"_id":"32166339","text":"PLCG2 protective variant p.P522R modulates tau pathology and disease progression in patients with mild cognitive impairment.","name":"Ramirez A 2020","parentAreaRef":{"id":"31131421"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32166339","children":[]}, 
-{"_id":"33028190","text":"DNA methylation microarrays identify epigenetically regulated lipid related genes in obese patients with hypercholesterolemia.","name":"Dembi<U+0144>ska-Kie<U+0107> A 2020","parentAreaRef":{"id":"32787975"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33028190","children":[]}, 
-{"_id":"32854766","text":"Correction to: Genome-wide profiling of DNA methylation and gene expression identifies candidate genes for human diabetic neuropathy.","name":"Hur J 2020","parentAreaRef":{"id":"32787975"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=32854766","children":[]}, 
-{"_id":"33101590","text":"Rh-CSF1 Attenuates Oxidative Stress and Neuronal Apoptosis via the CSF1R/PLCG2/PKA/UCP2 Signaling Pathway in a Rat Model of Neonatal HIE.","name":"Zhang JH 2020","parentAreaRef":{"id":"32522286"},"linker":"https://www.ncbi.nlm.nih.gov/pubmed/?term=33101590","children":[]}, 
+{
+    "_id": "p1",
+    "name": "Covid-19",
+    "text": "sub strain within the family of viruses known as the coronavirus",
+    "status": "blue",
+    "children": [
+        {
+            "_id": 1,
+            "name": "spreading",
+            "status": "blue",
+            "text": "empty",
+            "parentAreaRef": {
+                "id": "p1"
+            },
+            "children": [
+                {
+                    "_id": 7,
+                    "name": "effective reproductive number",
+                    "status": "blue",
+                    "text": "As opposed to the basic reproductive number (the number of ppl that get infected after coming into contact with infectious person- in controlled environment) the effective reproductive number is the same thing except under real world conditions.\nR>1 spreading\nR<1 declining\nThe effective reproduction number can be estimated by the product of the basic reproductive number a\nnd the fraction of the host population that is susceptible (x). So:\nFor example, if R0 for influenza is 12 in a population where half of the population is immune, the effective reproductive number for influenza is 12 x 0.5 = 6. Under these circumstances, a single case of influenza would produce an average of 6 new secondary cases.1",
+                    "parentAreaRef": {
+                        "id": "1"
+                    },
+                    "linkback": "tex2jax",
+                    "linker": "https://www.healthknowledge.org.uk/public-health-textbook/research-methods/1a-epidemiology/epidemic-theory",
+                    "children": [
+                        {
+                            "_id": 9,
+                            "name": "interactive website",
+                            "status": "blue",
+                            "text": "COVID-19",
+                            "parentAreaRef": {
+                                "id": "7"
+                            },
+                            "linkback": "flex-fix flex-align-center allow-shrink margin-left-1 flex-horizontal flex-align-items-baseline",
+                            "linker": "https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "_id": 13,
+                    "name": "strategies",
+                    "status": "blue",
+                    "text": "empty",
+                    "parentAreaRef": {
+                        "id": "1"
+                    },
+                    "pic": "/Users/Deirdreclarkson/js/json_files/13_Covid-19_.YnP.png",
+                    "children": [
+                        {
+                            "_id": 15,
+                            "name": "US",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 17,
+                            "name": "UK",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": [
+                                {
+                                    "_id": 33,
+                                    "name": "advice website",
+                                    "status": "blue",
+                                    "text": "Coronavirus information: What should I do?",
+                                    "parentAreaRef": {
+                                        "id": "17"
+                                    },
+                                    "linkback": "column--primary",
+                                    "linker": "https://www.bbc.co.uk/news/health-51711227",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "_id": 19,
+                            "name": "Ireland",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 21,
+                            "name": "Italy",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 23,
+                            "name": "China",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 25,
+                            "name": "Iran",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 27,
+                            "name": "Internet",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": [
+                                {
+                                    "_id": 29,
+                                    "name": "Facebook",
+                                    "status": "blue",
+                                    "text": "empty",
+                                    "parentAreaRef": {
+                                        "id": "27"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "_id": 31,
+                                    "name": "Twitter",
+                                    "status": "blue",
+                                    "text": "empty",
+                                    "parentAreaRef": {
+                                        "id": "27"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "_id": 34,
+                            "name": "social distancing",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 40,
+                            "name": "severity of measures",
+                            "status": "blue",
+                            "text": "https://www.imperial.ac.uk/media/imperial-college/medicine/sph/ide/gida-fellowships/Imperial-College-COVID19-NPI-modelling-16-03-2020.pdf",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": [
+                                {
+                                    "_id": 42,
+                                    "name": "interactive graph",
+                                    "status": "blue",
+                                    "text": "But interventions matter hugely. Ending public gatherings, closing workplaces and some schools, mass\n testing and fortifying hospitals keep infection rates down and reduce deaths.",
+                                    "parentAreaRef": {
+                                        "id": "40"
+                                    },
+                                    "linkback": "g-scrollinggraphic_copy",
+                                    "linker": "https://www.nytimes.com/interactive/2020/03/13/opinion/coronavirus-trump-response.html",
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "_id": 48,
+                            "name": "Sweden",
+                            "status": "blue",
+                            "text": "empty",
+                            "parentAreaRef": {
+                                "id": "13"
+                            },
+                            "children": [
+                                {
+                                    "_id": 50,
+                                    "name": "Herd immunity may be a bad idea",
+                                    "status": "blue",
+                                    "text": "Once enough immunity has been built in the population, each person will infect fewer than one other \nperson, so a new epidemic cannot start afresh. But an epidemic that is already underway will continu\ne to spread. If 100,000 people are infectious at the peak and they each infect 0.9 people, thats st\nill 90,000 new infections, and more after that. A runaway train doesnt stop the instant the track b\negins to slope uphill, and a rapidly spreading virus doesnt stop right when herd immunity is attain\ned.\nIf the pandemic went uncontrolled in the United States, it could continue for months after herd immu\nnity was reached, infecting many more millions in the process.\nBy the time the epidemic ended, a very large proportion of the population would have been infected \n far above our expected herd immunity threshold of around two-thirds. These additional infections ar\ne what epidemiologists refer to as overshoot.",
+                                    "parentAreaRef": {
+                                        "id": "48"
+                                    },
+                                    "linkback": "css-1vxca1d e1qksbhf0",
+                                    "linker": "https://www.nytimes.com/2020/05/01/opinion/coronavirus-herd-immunity.html?smtyp=cur&smid=tw-nytopinion",
+                                    "pic": "/Users/Deirdreclarkson/js/json_files/50_Covid-19_.YnP.png",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "_id": 36,
+                    "name": "covert spreaders",
+                    "status": "blue",
+                    "text": "Many scientists fear that this might also have led to an underestimate of kids susceptibility to th\ne virus. A study of more than 700 infected children in China found that 56% had mild or no symptoms6\n.",
+                    "parentAreaRef": {
+                        "id": "1"
+                    },
+                    "linkback": "article__body serif cleared",
+                    "linker": "https://www.nature.com/articles/d41586-020-00822-x",
+                    "children": []
+                }
+            ]
+        },
+        {
+            "_id": 3,
+            "name": "source unknown",
+            "status": "blue",
+            "text": "empty",
+            "parentAreaRef": {
+                "id": "p1"
+            },
+            "children": []
+        },
+        {
+            "_id": 5,
+            "name": "when will it stop",
+            "status": "blue",
+            "text": "empty",
+            "parentAreaRef": {
+                "id": "p1"
+            },
+            "children": [
+                {
+                    "_id": 11,
+                    "name": "long or short term",
+                    "status": "blue",
+                    "text": "The number of infections climbs by more than two million. So its not just intervening thats import\nant its intervening quickly. Yesterday is better than today, which is better than tomorrow.",
+                    "parentAreaRef": {
+                        "id": "5"
+                    },
+                    "linkback": "g-scrollinggraphic_copy",
+                    "linker": "https://www.nytimes.com/interactive/2020/03/13/opinion/coronavirus-trump-response.html",
+                    "children": []
+                },
+                {
+                    "_id": 47,
+                    "name": "models",
+                    "status": "blue",
+                    "text": "models",
+                    "parentAreaRef": {
+                        "id": "5"
+                    },
+                    "linkback": "article__body serif cleared",
+                    "linker": "https://www.nature.com/articles/d41586-020-01003-6",
+                    "children": []
+                },
+                {
+                    "_id": 51,
+                    "parentAreaRef": {
+                        "id": "5"
+                    },
+                    "text": "empty",
+                    "name": "science",
+                    "status": "blue",
+                    "scores": {
+                        "1": 0,
+                        "2": 0,
+                        "3": 0,
+                        "4": 0,
+                        "5": 0,
+                        "6": 0,
+                        "7": 0,
+                        "8": 0,
+                        "9": 0,
+                        "10": 0
+                    },
+                    "children": [
+                        {
+                            "_id": 53,
+                            "parentAreaRef": {
+                                "id": "51"
+                            },
+                            "text": "empty",
+                            "name": "vaccine dev",
+                            "status": "blue",
+                            "scores": {
+                                "1": 0,
+                                "2": 0,
+                                "3": 0,
+                                "4": 0,
+                                "5": 0,
+                                "6": 0,
+                                "7": 0,
+                                "8": 0,
+                                "9": 0,
+                                "10": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 55,
+                            "parentAreaRef": {
+                                "id": "51"
+                            },
+                            "text": "empty",
+                            "name": "drug dev",
+                            "status": "blue",
+                            "scores": {
+                                "1": 0,
+                                "2": 0,
+                                "3": 0,
+                                "4": 0,
+                                "5": 0,
+                                "6": 0,
+                                "7": 0,
+                                "8": 0,
+                                "9": 0,
+                                "10": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "_id": 57,
+                            "parentAreaRef": {
+                                "id": "51"
+                            },
+                            "text": "https://www.nature.com/articles/s41586-020-2286-9_reference.pdf",
+                            "name": "PPI net",
+                            "status": "blue",
+                            "scores": {
+                                "1": 0,
+                                "2": 0,
+                                "3": 0,
+                                "4": 0,
+                                "5": 0,
+                                "6": 0,
+                                "7": 0,
+                                "8": 0,
+                                "9": 0,
+                                "10": 0
+                            },
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "_id": 38,
+            "name": "different from other family members",
+            "status": "blue",
+            "text": "SARS-CoV-2 has been identified as a genus ý-coronavirus, and it shares 79.5% sequence homology with SARS-CoV\nWe showed that the total number of NK and CD8+ T cells was decreased markedly in patients with SARS-\nCoV-2 infection. The function of NK and CD8+ T cells was exhausted with the increased expression of \nNKG2A in COVID-19 patients. Importantly, in patients convalescing after therapy, the number of NK an\nd CD8+ T cells was restored with reduced expression of NKG2A. These results suggest that the functio\nnal exhaustion of cytotoxic lymphocytes is associated with SRAS-CoV-2 infection. Hence, SARS-CoV-2 i\nnfection may break down antiviral immunity at an early stage.",
+            "parentAreaRef": {
+                "id": "p1"
+            },
+            "linkback": "c-article-section__content",
+            "linker": "https://www.nature.com/articles/s41423-020-0402-2",
+            "children": []
+        }
+    ]
+}
