@@ -203,7 +203,7 @@ $('#pic').click(function(){
     console.log(i)
     if(tree[i]['_id']==pos){
       var name=tree[0].name;
-      tree[i]['pic']="/Users/Deirdreclarkson/js/json_files/"+pos+"_"+name+"_"+".YnP.png";
+      tree[i]['pic']=pos+"_"+name+"_"+".YnP.png";
       console.log('set');
     }
   }
@@ -741,7 +741,7 @@ $('#upload_scraped').click(function() {
     }
     rawFile.send(null);
   }
-  console.log(readTextFile("file:///Users/Deirdreclarkson/js/json_files/test.json"))
+  console.log(readTextFile("file://test.json"))
 //   d3.csv("file:///Users/Deirdreclarkson/js/ynp/links.csv", function(data) {
 //     console.log(data)
 //   dataset = data.map(function(d) { console.log(d); });
@@ -836,7 +836,7 @@ $('#download').click(function(){
 //         window.URL.revokeObjectURL(url);
 //     };
 // }());
-//     fileName = "/Users/Deirdreclarkson/js/json_files/my-download.json";
+//     fileName = "my-download.json";
 //     saveData(data, fileName);
 
 var done_yet=localStorage.getItem('done_yet');

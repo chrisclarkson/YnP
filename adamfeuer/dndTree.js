@@ -183,7 +183,7 @@ function picture(d){
           }
         };
     init();
-    d.pic="/Users/Deirdreclarkson/js/json_files/"+String(d._id)+"_"+d.name+"_"+".YnP.png";
+    d.pic=String(d._id)+"_"+d.name+"_"+".YnP.png";
     outer_update(d,adding=false,deleting=true,renaming=false);
 }
 
